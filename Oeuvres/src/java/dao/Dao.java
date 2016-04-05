@@ -157,30 +157,34 @@ public abstract class Dao {
      * @throws Exception 
      */
      protected Map lecture(String requete, Map mParams) throws Exception {
-       Connection connection = null;
-        PreparedStatement ps=null;
-         ResultSet rs = null;
-         Map mRecord;
-         Map mResults = new HashMap();
-         
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+        Connection connection = null;
+        Map mRecord;
+        Map mResults = new HashMap();
         try {
-            connection=connecter();
-            ps= connection.prepareStatement(requete);
-            setParametres(ps,(Map)mParams.get(0));
-            rs= ps.executeQuery();
+            connection = connecter();
+            ps = connection.prepareStatement(requete);
+            setParametres(ps, (Map)mParams.get(0));
+            rs = ps.executeQuery();
             ResultSetMetaData rsm = rs.getMetaData();
             int nbColonnes = rsm.getColumnCount();
-            int cptRecord=0;
-            while(rs.next()){
-            mRecord = new HashMap();
-            for (int i =1;i<=nbColonnes;i++){
-                String nomColonne=rsm.getCatalogName(i).toLowerCase();
-                mRecord.put(nomColonne,rs.getObject(rsm.getColumnName(i)));
+            int cptRecord = 0;
+            // Pour chacun des enregistrements
+            while (rs.next()) {
+                // Instancier un Dictionnaire pour l'enregistrement
+                mRecord = new HashMap();
+                // Pour chacune des colonnes
+                for (int i = 1; i <= nbColonnes; i++) {
+                    // Récupérer le nom de la colonne
+                    String nomColonne = rsm.getColumnName(i).toLowerCase();
+                    // Ajouter la colonne et sa valeur au Dictionnaire
+                    mRecord.put(nomColonne, rs.getObject(rsm.getColumnName(i)));
+                }
+                // Ajouter le Dictionnaire dans le Dictionnaire des enregistrements
+                mResults.put(cptRecord++, mRecord);
             }
-            mResults.put(cptRecord++,mRecord);
-        }
-           return (mResults);
-     
+            return (mResults);
         } catch (Exception e) {
             throw e;
         } finally {
@@ -198,8 +202,8 @@ public abstract class Dao {
                 e.printStackTrace();
             }
         }
-            
     }
+
 
     /**
      * Affecte les paramètres du Dictionnaire aux paramètres du PreparedStatement

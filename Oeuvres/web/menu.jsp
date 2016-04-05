@@ -12,7 +12,7 @@
                 <a class="navbar-brand" href="index.oe">Accueil</a>
             </div>
             <div class="collapse navbar-collapse" id="navbar-collapse-target">
-                <c:if test="${sessionScope.userId != null}">
+                <c:if test="${sessionScope.userS != null}">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
                             <a class="dropdown-toggle" data-toggle="dropdown">Oeuvres<b class="caret"></b></a>
@@ -27,10 +27,10 @@
                     </ul>     
                 </c:if>
                 <ul class="nav navbar-nav navbar-right"> 
-                    <c:if test="${sessionScope.userId != null}">
+                    <c:if test="${sessionScope.userS != null}">
                         <li><a href="deconnecter.oe">Se déconnecter</a></li>
                     </c:if>  
-                    <c:if test="${sessionScope.userId == null}">                   
+                    <c:if test="${sessionScope.userS == null}">                   
                         <li><a href="login.oe">Se connecter</a></li>
                     </c:if>  
                 </ul>

@@ -31,21 +31,26 @@ public class ProprietaireDAO extends Dao{
      * @throws Exception 
      */
     public List<Proprietaire> liste() throws Exception {
+        // la méthode lecture() attend ce paramètre
         Map mParams = new HashMap();
         Map mParam = new HashMap();
-        mParams.put(0,mParam);
+        mParams.put(0, mParam);
+        // Dictionnaire recevant les enregistrements lus
         Map mResults;
+        // La collection de User à retourner
         List<Proprietaire> lProprietaires = new ArrayList<Proprietaire>();
-
         try {
-            
-            String requete="select * from proprietaire";
-            mResults = lecture(requete,mParams);
-            
-            for(Object record: mResults.keySet()){
+            String requete = "select * from proprietaire";
+            // Lecture des User dans la BdD
+            mResults = lecture(requete, mParams);
+            // Chaque enregistrement est référencé par un indice
+            // Pour chaque item du Dictionnaire
+            for (Object record :mResults.keySet()) {
+                // On récuprère le Dictionnaire de l'enregistrement
                 Map mRecord = (Map)mResults.get(record);
+                // On l'envoie pour affectation des données portées
+                // à l'objet Métier User qui ajouté à la Collection
                 lProprietaires.add(setProperties(mRecord));
-             
             }
             return (lProprietaires);
         } catch (Exception e) {
@@ -140,20 +145,17 @@ public class ProprietaireDAO extends Dao{
      * @return objet Métier User
      * @throws Exception 
      */
-    public Proprietaire lire_Login(String login) throws Exception {
-
+     public Proprietaire lire_Login(String login) throws Exception {
         Map mParams = new HashMap();
         Map mParam;
-        
         Map mResults;
-
         try {
+            String requete = "select * from proprietaire where login = ?";
             mParam = new HashMap();
             mParam.put(1, login);
             mParams.put(0, mParam);
-            String requete="select * from proprietaire where login=?";
-            mResults = lecture(requete,mParams);
-          if (mResults.size() > 0) {
+            mResults = lecture(requete, mParams);
+            if (mResults.size() > 0) {
                 Map mRecord = (Map)mResults.get(0);
                 return(setProperties(mRecord));
             } else {
@@ -161,8 +163,9 @@ public class ProprietaireDAO extends Dao{
             }
         } catch (Exception e) {
             throw e;
-        } 
+        }
     }
+
      
 
     /**
@@ -200,10 +203,10 @@ public class ProprietaireDAO extends Dao{
         Proprietaire proprietaire = new Proprietaire();
         try {
             proprietaire.setId_proprietaire(((Integer)(mRecord.get("id_proprietaire"))).intValue());
-            proprietaire.setNom_proprietaire(((String)(mRecord.get("nom_proprietaire"))).toString());
-            proprietaire.setPrenom_proprietaire(((String)(mRecord.get("prenom_proprietaire"))).toString());
-            proprietaire.setLogin(((String)(mRecord.get("login"))).toString());
-            proprietaire.setPwd(((String)(mRecord.get("pwd"))).toString());
+            proprietaire.setNom_proprietaire(((mRecord.get("nom_proprietaire"))).toString());
+            proprietaire.setPrenom_proprietaire(((mRecord.get("prenom_proprietaire"))).toString());
+            proprietaire.setLogin(((mRecord.get("login"))).toString());
+            proprietaire.setPwd(((mRecord.get("pwd"))).toString());
             
             return proprietaire;
         } catch (Exception e) {
