@@ -34,7 +34,7 @@ public abstract class Dao {
         try {
             initCtx = new InitialContext();
             envCtx = (Context) initCtx.lookup("java:comp/env");
-            ds = (DataSource) envCtx.lookup("jdbc/Personnel");
+            ds = (DataSource) envCtx.lookup("jdbc/Oeuvres");
             connection = ds.getConnection();
             return (connection);
         } catch (Exception e) {
