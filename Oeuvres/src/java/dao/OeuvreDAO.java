@@ -45,7 +45,7 @@ public class OeuvreDAO extends Dao {
                 // On récuprère le Dictionnaire de l'enregistrement
                 Map mRecord = (Map)mResults.get(record);
                 // On l'envoie pour affectation des données portées
-                // à l'objet Métier User qui ajouté à la Collection
+                // à l'objet Métier Oeuvre qui ajouté à la Collection
                 lOeuvres.add(setProperties(mRecord));
             }
             return (lOeuvres);
@@ -118,7 +118,7 @@ Map mParams = new HashMap();
             oeuvre.setId_oeuvre(((Integer)(mRecord.get("id_oeuvre"))).intValue());
             oeuvre.setId_proprietaire(((Integer)(mRecord.get("id_proprietaire"))).intValue());
             oeuvre.setPrix(((BigDecimal)(mRecord.get("prix"))).floatValue());
-            oeuvre.setTitre(((mRecord.get("id_oeuvre"))).toString());
+            oeuvre.setTitre(((mRecord.get("titre"))).toString());
             
             ProprietaireDAO proprietaireDAO = new ProprietaireDAO();
             oeuvre.setProprietaire(proprietaireDAO.lire_Id(oeuvre.getId_proprietaire()));

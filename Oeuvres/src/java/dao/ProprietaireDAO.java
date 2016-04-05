@@ -116,22 +116,20 @@ public class ProprietaireDAO extends Dao{
      */
     public Proprietaire lire_Id(int id) throws Exception {
         Map mParams = new HashMap();
-        Map mParam = new HashMap();
-        mParams.put(0,mParam);
+        Map mParam;
         Map mResults;
-        Proprietaire Proprietaire = new Proprietaire();
-
         try {
-            
-            String requete="select * from proprietaire where id_proprietaire=?";
-            mResults = lecture(requete,mParams);
-            
-            for(Object record: mResults.keySet()){
-                Map mRecord = (Map)mResults.get(record);
-                Proprietaire = (setProperties(mRecord));
-             
+            String requete = "select * from proprietaire where id_proprietaire = ?";
+            mParam = new HashMap();
+            mParam.put(1, id);
+            mParams.put(0, mParam);            
+            mResults = lecture(requete, mParams);
+            if (mResults.size() > 0) {
+                Map mRecord = (Map)mResults.get(0);
+                return(setProperties(mRecord));
+            }  else {
+                throw new Exception("Utilisateur inconnu !");
             }
-            return (Proprietaire);
         } catch (Exception e) {
             throw e;
         } 
