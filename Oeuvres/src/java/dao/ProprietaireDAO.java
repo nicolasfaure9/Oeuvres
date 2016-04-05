@@ -143,22 +143,22 @@ public class ProprietaireDAO extends Dao{
     public Proprietaire lire_Login(String login) throws Exception {
 
         Map mParams = new HashMap();
-        Map mParam = new HashMap();
-        mParams.put(0,mParam);
+        Map mParam;
+        
         Map mResults;
-        Proprietaire Proprietaire = new Proprietaire();
 
         try {
-            
+            mParam = new HashMap();
+            mParam.put(1, login);
+            mParams.put(0, mParam);
             String requete="select * from proprietaire where login=?";
             mResults = lecture(requete,mParams);
-            
-            for(Object record: mResults.keySet()){
-                Map mRecord = (Map)mResults.get(record);
-                Proprietaire = (setProperties(mRecord));
-             
+          if (mResults.size() > 0) {
+                Map mRecord = (Map)mResults.get(0);
+                return(setProperties(mRecord));
+            } else {
+                throw new Exception("Utilisateur inconnu !");
             }
-            return (Proprietaire);
         } catch (Exception e) {
             throw e;
         } 
@@ -178,8 +178,8 @@ public class ProprietaireDAO extends Dao{
         boolean retour = false;
         
         try {
-            Proprietaire pro = lire_Login(login);
-            proprietaire = pro;
+            this.proprietaire = lire_Login(login);
+            
             if (pwd.equals(proprietaire.getPwd())) {
                 retour = true;
             }

@@ -4,6 +4,7 @@
  */
 package controleurs;
 
+import dao.ProprietaireDAO;
 import java.io.IOException;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -158,6 +159,7 @@ public class slOeuvres extends HttpServlet {
      */
     private String connecter(HttpServletRequest request) throws Exception {
         ProprietaireDAO user;
+        Proprietaire proprietaire;
         String login, pwd;
         String pageReponse="/login.jsp";
         
@@ -167,6 +169,8 @@ public class slOeuvres extends HttpServlet {
             pwd = request.getParameter("txtPwd");
             user = new ProprietaireDAO();
             if (user.connecter(login, pwd)) {
+                
+                proprietaire = user.getProprietaire();
                 pageReponse = "/home.jsp";
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userS", user);
