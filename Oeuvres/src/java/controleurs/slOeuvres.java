@@ -117,7 +117,8 @@ public class slOeuvres extends HttpServlet {
         } catch (Exception e) {
             erreur = e.getMessage();
             if(erreur.contains("FK_RESERVATION_OEUVRE"))
-                erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";            
+                //erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";  
+                erreur="";
             throw new Exception(erreur);
         }
     }    
@@ -151,7 +152,6 @@ public class slOeuvres extends HttpServlet {
         String vueReponse;
         try {
             vueReponse = "/home.jsp";
-           
             return (vueReponse);
         } catch (Exception e) {
             throw e;

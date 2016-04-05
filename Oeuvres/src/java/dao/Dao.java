@@ -87,10 +87,9 @@ public abstract class Dao {
         PreparedStatement ps = null;
         Connection connection = null;
         int cptParam=0;
-        
         try {
-            Connexion cnx = new Connexion();
-            connection = cnx.connecter();
+            
+            connection = this.connecter();
             connection.setAutoCommit(false);
             for (String requete :lRequetes){
                 if (requete.contains(":id")){
@@ -99,8 +98,7 @@ public abstract class Dao {
                 }
                  ps = connection.prepareStatement(requete);
                  setParametres(ps,(Map)mParams.get(cptParam++));
-            }
-           
+            }    
  
         } catch (Exception e) {
              
@@ -127,7 +125,9 @@ public abstract class Dao {
      * @throws Exception 
      */
     protected void ecriture(String requete, Map mParams) throws Exception {
-
+        PreparedStatement ps = null;
+        Connection connection = null;
+        
         try {
 
         } catch (Exception e) {
@@ -154,7 +154,9 @@ public abstract class Dao {
      * @throws Exception 
      */
     protected Map lecture(String requete, Map mParams) throws Exception {
-
+        Connection connection = null;
+        PreparedStatement ps=null;
+        
         try {
 
             return (mResults);

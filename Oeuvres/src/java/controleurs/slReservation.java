@@ -119,7 +119,8 @@ public class slReservation extends HttpServlet {
         } catch (Exception e) {
             erreur = e.getMessage();
             if(erreur.contains("PRIMARY"))
-                erreur = "L'oeuvre " + titre + " a déjà été réservée pour le : " + date + " !";            
+              //  erreur = "L'oeuvre " + titre + " a déjà été réservée pour le : " + date + " !";      
+                erreur="";
             throw new Exception(erreur);
         }
     }
