@@ -129,7 +129,10 @@ public abstract class Dao {
         Connection connection = null;
         
         try {
-
+            connection = connecter();
+            ps = connection.prepareStatement(requete);
+            setParametres(ps,(Map)mParams.get(0));
+            ps.executeUpdate();
         } catch (Exception e) {
             throw e;
         } finally {
@@ -192,7 +195,11 @@ public abstract class Dao {
      * @throws Exception 
      */
     private PreparedStatement setParametres(PreparedStatement ps, Map mParam) throws Exception {
-
+        String classe;
+        for(Object indice : mParam.keySet()){
+            
+        }
+        
         return ps;
     }
 }
