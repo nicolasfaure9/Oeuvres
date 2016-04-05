@@ -52,11 +52,18 @@ public class slOeuvres extends HttpServlet {
             } else if (demande.equalsIgnoreCase("supprimer.oe")) {
                 vueReponse = supprimerOeuvre(request);
             }  
+            
+   
         } catch (Exception e) {
             erreur = e.getMessage();
         } finally {
             request.setAttribute("erreurR", erreur);
-            request.setAttribute("pageR", vueReponse);            
+            request.setAttribute("pageR", vueReponse);
+            HttpSession session = request.getSession(true);
+            Object sessionScope = session.getAttribute("userS");
+            Proprietaire user = (Proprietaire) sessionScope;
+            if(user != null)
+              request.setAttribute("sessionScope.userId", 1);  
             RequestDispatcher dsp = request.getRequestDispatcher("/index.jsp");
             if (vueReponse.contains(".oe"))
                 dsp = request.getRequestDispatcher(vueReponse);
@@ -150,7 +157,7 @@ public class slOeuvres extends HttpServlet {
      * @throws Exception
      */
     private String connecter(HttpServletRequest request) throws Exception {
-        Adherent user;
+        ProprietaireDAO user;
         String login, pwd;
         String pageReponse="/login.jsp";
         
@@ -158,7 +165,7 @@ public class slOeuvres extends HttpServlet {
             
             login = request.getParameter("txtLogin");
             pwd = request.getParameter("txtPwd");
-            user = new Adherent();
+            user = new ProprietaireDAO();
             if (user.connecter(login, pwd)) {
                 pageReponse = "/home.jsp";
                 HttpSession session = request.getSession(true);
