@@ -31,6 +31,10 @@ public class Adherent {
     public void setPrenom_adherent(String prenom_adherent) {
         this.prenom_adherent = prenom_adherent;
     }
-    // </editor-fold> 
+    
+    public boolean connecter(String login, String pwd) {
+        boolean retour = false;
+        return (login.equalsIgnoreCase("robin") && pwd.equals("robin"));     
+    }
     
 }

@@ -153,13 +153,14 @@ public abstract class Dao {
      * @return Dictionnaire avec en clé le nom des colonne et en valeur les données
      * @throws Exception 
      */
-    protected Map lecture(String requete, Map mParams) throws Exception {
-        Connection connection = null;
+    /* protected Map lecture(String requete, Map mParams) throws Exception {
+       Connection connection = null;
         PreparedStatement ps=null;
         
         try {
 
-            return (mResults);
+           return (mResults);
+     
         } catch (Exception e) {
             throw e;
         } finally {
@@ -177,8 +178,9 @@ public abstract class Dao {
                 e.printStackTrace();
             }
         }
+            
     }
-
+*/
     /**
      * Affecte les paramètres du Dictionnaire aux paramètres du PreparedStatement
      * La key du dictionnaire représente la position du paramètre dans la requête

@@ -109,16 +109,17 @@ public class slOeuvres extends HttpServlet {
      * @throws Exception
      */
     private String supprimerOeuvre(HttpServletRequest request) throws Exception {
-        String vueReponse;
+        String vueReponse, titre;
+        
         try {
-
+            titre = request.getParameter("txttitre");
+            
             vueReponse = "catalogue.oe";           
             return (vueReponse);  
         } catch (Exception e) {
             erreur = e.getMessage();
-            if(erreur.contains("FK_RESERVATION_OEUVRE"))
-                //erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";  
-                erreur="";
+       //     if(erreur.contains("FK_RESERVATION_OEUVRE"))
+        //        erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";            
             throw new Exception(erreur);
         }
     }    
@@ -149,12 +150,27 @@ public class slOeuvres extends HttpServlet {
      * @throws Exception
      */
     private String connecter(HttpServletRequest request) throws Exception {
-        String vueReponse;
+        Adherent user;
+        String login, pwd;
+        String pageReponse="/login.jsp";
+        
         try {
-            vueReponse = "/home.jsp";
-            return (vueReponse);
+            
+            login = request.getParameter("txtLogin");
+            pwd = request.getParameter("txtPwd");
+            user = new Adherent();
+            if (user.connecter(login, pwd)) {
+                pageReponse = "/home.jsp";
+                HttpSession session = request.getSession(true);
+                session.setAttribute("userS", user);
+                request.setAttribute("userR", user);
+            } else {
+                erreur = "Login ou mot de passe inconnus !";
+            }
         } catch (Exception e) {
-            throw e;
+            erreur = e.getMessage();
+        } finally {
+            return (pageReponse);
         }
     }
 
@@ -174,10 +190,15 @@ public class slOeuvres extends HttpServlet {
      * @throws Exception 
      */
     private String login(HttpServletRequest request) throws Exception {
+        String pageReponse = "/login.jsp";
         try {
-            return ("/login.jsp");
+            HttpSession session = request.getSession(true);
+            if(session.getAttribute("userS")!= null)
+               pageReponse = ("/home.jsp");
         } catch (Exception e) {
             throw e;
+        }finally{
+            return pageReponse;
         }
     }    
     /**
