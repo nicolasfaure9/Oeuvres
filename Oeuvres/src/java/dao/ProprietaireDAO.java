@@ -6,6 +6,7 @@
 package dao;
 
 
+
 import modeles.*;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -109,9 +110,23 @@ public class ProprietaireDAO extends Dao{
      * @throws Exception 
      */
     public Proprietaire lire_Id(int id) throws Exception {
+        Map mParams = new HashMap();
+        Map mParam = new HashMap();
+        mParams.put(0,mParam);
+        Map mResults;
+        Proprietaire Proprietaire = new Proprietaire();
 
         try {
             
+            String requete="select * from proprietaire where id_proprietaire=?";
+            mResults = lecture(requete,mParams);
+            
+            for(Object record: mResults.keySet()){
+                Map mRecord = (Map)mResults.get(record);
+                Proprietaire = (setProperties(mRecord));
+             
+            }
+            return (Proprietaire);
         } catch (Exception e) {
             throw e;
         } 
@@ -127,12 +142,28 @@ public class ProprietaireDAO extends Dao{
      */
     public Proprietaire lire_Login(String login) throws Exception {
 
-        try {
+        Map mParams = new HashMap();
+        Map mParam = new HashMap();
+        mParams.put(0,mParam);
+        Map mResults;
+        Proprietaire Proprietaire = new Proprietaire();
 
+        try {
+            
+            String requete="select * from proprietaire where login=?";
+            mResults = lecture(requete,mParams);
+            
+            for(Object record: mResults.keySet()){
+                Map mRecord = (Map)mResults.get(record);
+                Proprietaire = (setProperties(mRecord));
+             
+            }
+            return (Proprietaire);
         } catch (Exception e) {
             throw e;
-        }
+        } 
     }
+     
 
     /**
      * Vérifie qu'un Utilisateur voulant s'authentifier
@@ -144,8 +175,14 @@ public class ProprietaireDAO extends Dao{
      */
     public boolean connecter(String login, String pwd) throws Exception {
         
+        boolean retour = false;
+        
         try {
-
+            Proprietaire pro = lire_Login(login);
+            proprietaire = pro;
+            if (pwd.equals(proprietaire.getPwd())) {
+                retour = true;
+            }
             return retour;
         } catch (Exception e) {
             throw e;
@@ -160,12 +197,13 @@ public class ProprietaireDAO extends Dao{
      * @throws Exception 
      */
     private Proprietaire setProperties(Map mRecord) throws Exception {
-        
+        Proprietaire proprietaire = new Proprietaire();
         try {
-            // Le nom de la colonne est la clé permettant de
-            // récupérer la valeur correspondante
-            
-            // Il faut aller chercher la catégorie du User
+            proprietaire.setId_proprietaire(((Integer)(mRecord.get("id_proprietaire"))).intValue());
+            proprietaire.setNom_proprietaire(((String)(mRecord.get("nom_proprietaire"))).toString());
+            proprietaire.setPrenom_proprietaire(((String)(mRecord.get("prenom_proprietaire"))).toString());
+            proprietaire.setLogin(((String)(mRecord.get("login"))).toString());
+            proprietaire.setPwd(((String)(mRecord.get("pwd"))).toString());
             
             return proprietaire;
         } catch (Exception e) {

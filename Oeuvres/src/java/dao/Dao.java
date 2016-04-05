@@ -159,9 +159,26 @@ public abstract class Dao {
      protected Map lecture(String requete, Map mParams) throws Exception {
        Connection connection = null;
         PreparedStatement ps=null;
-        
+         ResultSet rs = null;
+         Map mRecord;
+         Map mResults = new HashMap();
+         
         try {
-
+            connection=connecter();
+            ps= connection.prepareStatement(requete);
+            setParametres(ps,(Map)mParams.get(0));
+            rs= ps.executeQuery();
+            ResultSetMetaData rsm = rs.getMetaData();
+            int nbColonnes = rsm.getColumnCount();
+            int cptRecord=0;
+            while(rs.next()){
+            mRecord = new HashMap();
+            for (int i =1;i<=nbColonnes;i++){
+                String nomColonne=rsm.getCatalogName(i).toLowerCase();
+                mRecord.put(nomColonne,rs.getObject(rsm.getColumnName(i)));
+            }
+            mResults.put(cptRecord++,mRecord);
+        }
            return (mResults);
      
         } catch (Exception e) {
@@ -197,7 +214,16 @@ public abstract class Dao {
     private PreparedStatement setParametres(PreparedStatement ps, Map mParam) throws Exception {
         String classe;
         for(Object indice : mParam.keySet()){
-            
+            classe = mParam.get(indice).getClass().toString();
+            if(classe.contains("Integer")){
+                ps.setInt((Integer)indice, (Integer)mParam.get(indice));
+            }else if (classe.contains("String")){
+                ps.setString((Integer)indice,(String)mParam.get(indice));
+            }else if (classe.contains("Double")){
+                ps.setDouble((Integer)indice,(Double)mParam.get(indice));
+            }else if (classe.contains("Date")){
+                ps.setDate((Integer)indice,(Date)mParam.get(indice));
+            }
         }
         
         return ps;
