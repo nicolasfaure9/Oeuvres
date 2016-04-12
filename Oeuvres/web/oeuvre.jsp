@@ -1,5 +1,6 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <div  class="col-md-8 col-md-offset-1">
+    
     <h1 align='center'>${titre}</h1>
     <form class="form-signin form-horizontal" role="form" action="enregistrer.oe?id=${oeuvreR.id_oeuvre}" method="post">
         <div class="form-group">

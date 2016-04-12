@@ -54,7 +54,7 @@ public abstract class Dao {
     private int getIdentifiant(Connection connection, String id) throws Exception {
         CallableStatement cs = null;
         try {
-            cs = connection.prepareCall("{? = call generer_pk(?)}");
+            cs = connection.prepareCall("{? = call inc_parametre(?)}");
             cs.registerOutParameter(1, Types.INTEGER);
             cs.setString(2, id);
             cs.execute();
@@ -86,22 +86,28 @@ public abstract class Dao {
     protected void transaction(List<String> lRequetes, Map mParams, String cle) throws Exception {
         PreparedStatement ps = null;
         Connection connection = null;
-        int cptParam=0;
+        int cptParam = 0;
         try {
-            
-            connection = this.connecter();
+            connection = connecter();
             connection.setAutoCommit(false);
-            for (String requete :lRequetes){
+            // Pour chaque requête de la Collection
+            for (String requete : lRequetes) {
+                // Si la requête contient la séquence :id
+                // il faut générer une clé primaire et 
+                // remplacer :id par cette PK
                 if (requete.contains(":id")){
                     int id = getIdentifiant(connection, cle);
-                    requete = requete.replace(":id",""+id);
+                    requete = requete.replace(":id", ""+id);
                 }
-                 ps = connection.prepareStatement(requete);
-                 setParametres(ps,(Map)mParams.get(cptParam++));
-            }    
- 
+                ps = connection.prepareStatement(requete);
+                // Affecter les paramètres au PreparedStatement
+                setParametres(ps, (Map)mParams.get(cptParam++));
+                // Exécuter la requête
+                ps.executeUpdate();
+            }
+            connection.commit();
         } catch (Exception e) {
-             
+            connection.rollback();
             throw e;
         } finally {
             try {

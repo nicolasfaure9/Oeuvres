@@ -18,6 +18,10 @@ import java.util.Map;
  */
 public class OeuvreDAO extends Dao {
     
+     private Oeuvre oeuvre;
+    public Oeuvre getOeuvre(){
+        return this.oeuvre;
+    }
     public OeuvreDAO() {
     }
 
@@ -59,17 +63,26 @@ public class OeuvreDAO extends Dao {
      * @param user Objet Métier portant les données
      * @throws Exception 
      */
-    public void modifier(Proprietaire proprietaire) throws Exception {
+    public void modifier(Oeuvre oeuvre) throws Exception {
         // Dictionnaire des paramètres qui seront
         // affectés à la requête
-        
+      // Dictionnaire des paramètres qui seront
+        // affectés à la requête
+        Map mParams = new HashMap();
+        Map mParam;
         try {
-            
+            String requete = "update oeuvre set titre = ?, prix = ?, id_proprietaire = ? where id_oeuvre = ?";
             // On ajoute chaque paramètre au Dictionnaire
             // en spécifiant sa place dans la requête
-                        
-            // Mise à jour dans la BdD
+            mParam = new HashMap();            
+            mParam.put(1, oeuvre.getTitre());
+            mParam.put(2, oeuvre.getPrix());
+            mParam.put(3, oeuvre.getId_proprietaire());
+            mParam.put(4, oeuvre.getId_oeuvre());
             
+            mParams.put(0, mParam);            
+            // Mise à jour dans la BdD
+            ecriture(requete, mParams);
         } catch (Exception e) {
             throw e;
         } 
@@ -81,26 +94,53 @@ public class OeuvreDAO extends Dao {
      * @throws Exception 
      */
     public Oeuvre lire_Id(int id) throws Exception {
-Map mParams = new HashMap();
-        Map mParam = new HashMap();
-        mParams.put(0,mParam);
+        Map mParams = new HashMap();
+        Map mParam;
         Map mResults;
-        Oeuvre oeuvre = new Oeuvre();
-
         try {
-            
-            String requete="select * from oeuvre where id_oeuvre=?";
-            mResults = lecture(requete,mParams);
-            
-            for(Object record: mResults.keySet()){
-                Map mRecord = (Map)mResults.get(record);
-                oeuvre = (setProperties(mRecord));
-             
+            String requete = "select * from oeuvre where id_oeuvre = ?";
+            mParam = new HashMap();
+            mParam.put(1, id);
+            mParams.put(0, mParam);            
+            mResults = lecture(requete, mParams);
+            if (mResults.size() > 0) {
+                Map mRecord = (Map)mResults.get(0);
+                return(setProperties(mRecord));
+            }  else {
+                throw new Exception("oeuvre inconnue !");
             }
-            return (oeuvre);
         } catch (Exception e) {
             throw e;
         } 
+    }
+
+     public void ajouter(Oeuvre oeuvre) throws Exception {
+        // Dictionnaire des paramètres qui seront
+        // affectés à la requête        
+        Map mParams = new HashMap();
+        Map mParam;
+        try {
+            String requete = "insert into oeuvre (id_proprietaire, titre,prix,id_oeuvre)";
+            requete += " values (?, ?, ?, :id)";
+            // On ajoute chaque paramètre au Dictionnaire
+            // en spécifiant sa place dans la requête 
+            mParam = new HashMap();
+            
+            mParam.put(1, oeuvre.getId_proprietaire());
+            mParam.put(2, oeuvre.getTitre());
+            mParam.put(3, oeuvre.getPrix());
+            
+            mParams.put(0, mParam);
+            List<String> lRequetes = new ArrayList<String>();
+            // On utilise une collection de requêtes car c'est
+            // ce qu'attend la méthode transaction() en paramètre
+            lRequetes.add(requete);
+            // Le troisième paramètre servira à générer
+            // l'Id du nouvel Utilisateur
+            transaction(lRequetes, mParams, "OEUVRE");
+        } catch (Exception e) {
+            throw e;
+        }       
     }
     
     /**

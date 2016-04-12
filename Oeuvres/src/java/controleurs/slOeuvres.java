@@ -87,16 +87,62 @@ public class slOeuvres extends HttpServlet {
      */
     private String enregistrerOeuvre(HttpServletRequest request) throws Exception {
 
-        String vueReponse;
-
+       String vueReponse;
+        int id_oeuvre;
         try {
-
-            vueReponse = "catalogue.oe";
+            OeuvreDAO oeuvreDAO = new OeuvreDAO();
+            Oeuvre oeuvre = new Oeuvre();
+            id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            oeuvre.setId_oeuvre(id_oeuvre);
+            oeuvre.setTitre(request.getParameter("txtTitre"));
+            oeuvre.setPrix(Double.parseDouble(request.getParameter("txtPrix")));
+            
+            
+            String id = request.getParameter("lProprietaires");
+            int id_proprietaire = Integer.parseInt(id);
+            oeuvre.setId_proprietaire(id_proprietaire);
+            // Si on a un id c'est qu'il s'agit d'une modification
+            if (id_oeuvre > 0) {
+                oeuvreDAO.modifier(oeuvre);
+            } else {
+                oeuvreDAO.ajouter(oeuvre);
+            }
+            vueReponse = "/home.jsp";            
+            HttpSession session = request.getSession(true);
+           // String userId = session.getAttribute("userS").toString();
+            // Après une modification l'administrateur accède
+            // à la liste des utilisateur alors qu'un utilisateur
+            // lambda retourne à la page home
+            
+             vueReponse = "catalogue.oe";
             return (vueReponse);
         } catch (Exception e) {
             throw e;
         }
-    }
+    }    
+    
+private String creerOeuvre(HttpServletRequest request) throws Exception {
+        Oeuvre oeuvre;
+        ProprietaireDAO proprietaireDAO;
+        List<Proprietaire> lProprietaire;     
+        String vueReponse;
+        try {
+            oeuvre = new Oeuvre();
+            request.setAttribute("oeuvreR", oeuvre);
+            HttpSession session = request.getSession(true);
+            session.setAttribute("id", 0);
+            proprietaireDAO = new ProprietaireDAO();
+            lProprietaire = proprietaireDAO.liste();
+            request.setAttribute("lstProprietairesR", lProprietaire);
+            request.setAttribute("titre", "Ajouter Oeuvre");
+            vueReponse = "/oeuvre.jsp";
+            return (vueReponse);
+        } catch (Exception e) {
+            throw e;
+        
+        }
+    }    
+     
 
     /**
      * Lit et affiche une oeuvre pour pouvoir la modifier
@@ -107,15 +153,34 @@ public class slOeuvres extends HttpServlet {
      */
     private String modifierOeuvre(HttpServletRequest request) throws Exception {
 
+        OeuvreDAO oeuvreDAO;
+        List<Proprietaire> lProprietaires;
+        ProprietaireDAO proprietaireDAO;
         String vueReponse;
+        int id_oeuvre;
         try {
-
-            vueReponse = "/oeuvre.jsp";
+            vueReponse = "/login.jsp";
+            id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            if (id_oeuvre > 0) {
+                proprietaireDAO = new ProprietaireDAO();
+                lProprietaires = proprietaireDAO.liste();
+                oeuvreDAO = new OeuvreDAO();
+                Oeuvre oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
+                request.setAttribute("oeuvreR", oeuvre);
+                request.setAttribute("lstProprietairesR", lProprietaires);
+                request.setAttribute("titre", "Modifier une oeuvre");
+                vueReponse = "/oeuvre.jsp";
+            } else {
+                erreur = "Oeuvre inconnue !";
+            }
             return (vueReponse);
         } catch (Exception e) {
             throw e;
         }
     }
+    
+        
+       
 
     /**
      * Supprimer une oeuvre
@@ -126,7 +191,7 @@ public class slOeuvres extends HttpServlet {
      */
     private String supprimerOeuvre(HttpServletRequest request) throws Exception {
         String vueReponse, titre;
-
+        titre="";
         try {
             titre = request.getParameter("txttitre");
 
@@ -134,8 +199,8 @@ public class slOeuvres extends HttpServlet {
             return (vueReponse);
         } catch (Exception e) {
             erreur = e.getMessage();
-       //     if(erreur.contains("FK_RESERVATION_OEUVRE"))
-            //        erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";            
+            if(erreur.contains("FK_RESERVATION_OEUVRE"))
+                   erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";            
             throw new Exception(erreur);
         }
     }
@@ -148,17 +213,7 @@ public class slOeuvres extends HttpServlet {
      * @return String page de redirection
      * @throws Exception
      */
-    private String creerOeuvre(HttpServletRequest request) throws Exception {
-
-        String vueReponse;
-        try {
-
-            vueReponse = "/oeuvre.jsp";
-            return (vueReponse);
-        } catch (Exception e) {
-            throw e;
-        }
-    }
+    
 
     /**
      * Vérifie que l'utilisateur a saisi le bon login et mot de passe
