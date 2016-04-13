@@ -1,6 +1,10 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<c:import url="/menu.jsp"/>
+<c:import url="/bootstrap.jsp"/>
 <div  class="col-md-11 col-md-offset-1">
+      <body class="body">       
+        <div class="container">
     <h1 align='center'>Liste des réservations</h1>             
     <table class="table table-bordered table-striped">
         <thead>

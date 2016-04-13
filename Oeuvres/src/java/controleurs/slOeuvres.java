@@ -69,7 +69,7 @@ public class slOeuvres extends HttpServlet {
             if (user != null) {
                 request.setAttribute("sessionScope.userId", 1);
             }
-            RequestDispatcher dsp = request.getRequestDispatcher("/index.jsp");
+            RequestDispatcher dsp = request.getRequestDispatcher(vueReponse);
             if (vueReponse.contains(".oe")) {
                 dsp = request.getRequestDispatcher(vueReponse);
             }

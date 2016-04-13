@@ -1,4 +1,9 @@
-
+ 
+ <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+ <c:import url="/bootstrap.jsp"/>
+      <c:import url="/menu.jsp"/>
+      <body class="body">       
+        <div class="container">
 <h1 align='center'>Authentification</h1>
 <div class="well">
     <form class="form-signin form-horizontal" role="form" action="connecter.oe" method="post">
@@ -19,5 +24,7 @@
                 <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Valider</button>
             </div>
         </div>
+</div>
+
     </form>
 </div>

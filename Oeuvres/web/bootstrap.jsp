@@ -1,4 +1,3 @@
-
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <html>
     <head>
@@ -12,19 +11,4 @@
         <script src="lib/jquery-ui/jquery-ui.js" type="text/javascript"></script>
         <title>Gestion des oeuvres</title>
     </head>
-    <body class="body">       
-        <div class="container">
-            
-            <c:import url="/bootstrap.jsp"/>
-      <c:import url="/menu.jsp"/>
-            <div>
-                <c:if test="${pageR != null}">
-                    <c:import url="${pageR}"/>
-                </c:if>
-                <c:if test="${erreurR != null}">
-                    <c:import url="/erreur.jsp"/>
-                </c:if>   
-            </div>
-        </div>
-    </body>
 </html>
