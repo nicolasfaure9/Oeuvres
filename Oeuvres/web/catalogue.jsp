@@ -11,12 +11,8 @@
                         <tr>
                             <th>Titre</th>
                             <th>Prix</th>
-                            <th>Prénom propriétaire</th>
-                            <th>Nom propriétaire</th>
+                            <th>Propriétaire</th>
                             <th></th>
-
-                            <th></th>
-
                         </tr>  
                     </thead>
                     <tbody>
@@ -24,8 +20,8 @@
                             <tr>
                                 <td>${oeuvre.titre}</td>
                                 <td>${oeuvre.prix}</td>
-                                <td>${oeuvre.proprietaire.prenom_proprietaire}</td>
-                                <td>${oeuvre.proprietaire.nom_proprietaire}</td>
+                                <td>${oeuvre.proprietaire.prenom_proprietaire}    ${oeuvre.proprietaire.nom_proprietaire}</td>
+                               
                                 <td><a class="btn btn-success btn-xs glyphicon glyphicon-shopping-cart" href="reserver.res?id=${oeuvre.id_oeuvre}" title="Réserver"></a>
 
                                 <a class="btnModifier btn btn-info btn-xs glyphicon glyphicon-edit" href="modifier.oe?id=${oeuvre.id_oeuvre}" data-toggle="modal"data-target="#oeuvre" title="Modifier"></a>
@@ -36,7 +32,7 @@
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="history.go(0)">&times;</button>
                                                     <h4 class="modal-title" id="myModalLabel">Confirmation requise</h4>
                                                 </div>
                                                 <div class="modal-body">
@@ -61,16 +57,7 @@
     <!-- Modal -->
     <div class="modal fade" id="oeuvre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            <div class="modal-content"  id="modal-content">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body">
-
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-primary" id="modalBtnModifier">Modifier</button>
-                </div>
+            
             </div><!-- /.modal-content -->
         </div><!-- /.modal-dialog -->
     </div><!-- /.modal -->

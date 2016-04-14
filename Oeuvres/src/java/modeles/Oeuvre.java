@@ -41,6 +41,7 @@ public class Oeuvre {
         return prix;
     }
     public void setPrix(double prix) {
+        
         this.prix = prix;
     }
     // </editor-fold> 

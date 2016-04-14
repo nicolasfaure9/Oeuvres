@@ -97,7 +97,6 @@ public class slOeuvres extends HttpServlet {
             oeuvre.setTitre(request.getParameter("txtTitre"));
             oeuvre.setPrix(Double.parseDouble(request.getParameter("txtPrix")));
             
-            
             String id = request.getParameter("lProprietaires");
             int id_proprietaire = Integer.parseInt(id);
             oeuvre.setId_proprietaire(id_proprietaire);
@@ -191,12 +190,19 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
      */
     private String supprimerOeuvre(HttpServletRequest request) throws Exception {
         String vueReponse, titre;
+        OeuvreDAO oeuvreDAO;
+        Oeuvre oeuvre;
+        int id_oeuvre;
         titre="";
-        try {
-            titre = request.getParameter("txttitre");
-
+        
+        try {  
+            id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            oeuvreDAO = new OeuvreDAO();
+            oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
+            oeuvreDAO.Supprimer(oeuvre);
             vueReponse = "catalogue.oe";
             return (vueReponse);
+            
         } catch (Exception e) {
             erreur = e.getMessage();
             if(erreur.contains("FK_RESERVATION_OEUVRE"))

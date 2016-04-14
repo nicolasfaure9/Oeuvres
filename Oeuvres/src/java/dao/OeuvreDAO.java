@@ -87,6 +87,29 @@ public class OeuvreDAO extends Dao {
             throw e;
         } 
     }
+    
+     public void Supprimer(Oeuvre oeuvre) throws Exception {
+        // Dictionnaire des paramètres qui seront
+        // affectés à la requête
+      // Dictionnaire des paramètres qui seront
+        // affectés à la requête
+        Map mParams = new HashMap();
+        Map mParam;
+        try {
+            String requete = "delete from oeuvre where id_oeuvre = ?";
+            // On ajoute chaque paramètre au Dictionnaire
+            // en spécifiant sa place dans la requête
+            mParam = new HashMap();            
+            
+            mParam.put(1, oeuvre.getId_oeuvre());
+            
+            mParams.put(0, mParam);            
+            // Mise à jour dans la BdD
+            ecriture(requete, mParams);
+        } catch (Exception e) {
+            throw e;
+        } 
+    }
 
     /**
      * Lecture d'une Catégorie sur son Id
@@ -157,7 +180,7 @@ public class OeuvreDAO extends Dao {
             
             oeuvre.setId_oeuvre(((Integer)(mRecord.get("id_oeuvre"))).intValue());
             oeuvre.setId_proprietaire(((Integer)(mRecord.get("id_proprietaire"))).intValue());
-            oeuvre.setPrix(((BigDecimal)(mRecord.get("prix"))).floatValue());
+            oeuvre.setPrix(((BigDecimal)(mRecord.get("prix"))).doubleValue());
             oeuvre.setTitre(((mRecord.get("titre"))).toString());
             
             ProprietaireDAO proprietaireDAO = new ProprietaireDAO();
