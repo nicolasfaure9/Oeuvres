@@ -19,7 +19,9 @@
                             <a class="dropdown-toggle" data-toggle="dropdown">Oeuvres<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="catalogue.oe">Lister</a></li>
+                                
                                 <li><a href="ajouter.oe" data-toggle="modal"data-target="#oeuvre">Ajouter</a></li>
+                                
                             </ul>
                         </li>                           
                     </ul> 

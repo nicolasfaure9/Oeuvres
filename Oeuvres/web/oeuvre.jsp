@@ -1,9 +1,7 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
     <c:import url="/bootstrap.jsp"/>
-
     <body>
-
         <div class="modal-content">
             <div class="modal-header">
                 <button type="button" class="close" data-dismiss="modal" onClick="history.go(0)">&times;</button>
@@ -33,7 +31,6 @@
                             </select>
                         </div>
                     </div>             
-
                     <div class="modal-footer">
                         <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Valider</button>
                     </div>

@@ -37,25 +37,44 @@ public class slOeuvres extends HttpServlet {
             throws ServletException, IOException {
         String demande;
         String vueReponse = "/home.jsp";
+
         erreur = "";
         try {
             demande = getDemande(request);
-            if (demande.equalsIgnoreCase("login.oe")) {
+            HttpSession session = request.getSession(true);
+            Object sessionScope = session.getAttribute("userS");
+            ProprietaireDAO user = (ProprietaireDAO) sessionScope;
+
+            if (user != null) {
+                request.setAttribute("sessionScope.userId", 1);
+            }
+            if ((user == null) || (demande.equalsIgnoreCase("login.oe"))) {
+
+                if (demande.equalsIgnoreCase("connecter.oe")) {
+                    vueReponse = connecter(request);
+                }
                 vueReponse = login(request);
-            } else if (demande.equalsIgnoreCase("connecter.oe")) {
-                vueReponse = connecter(request);
+
             } else if (demande.equalsIgnoreCase("deconnecter.oe")) {
                 vueReponse = deconnecter(request);
             } else if (demande.equalsIgnoreCase("ajouter.oe")) {
+
                 vueReponse = creerOeuvre(request);
+
             } else if (demande.equalsIgnoreCase("enregistrer.oe")) {
                 vueReponse = enregistrerOeuvre(request);
             } else if (demande.equalsIgnoreCase("modifier.oe")) {
+
                 vueReponse = modifierOeuvre(request);
+
             } else if (demande.equalsIgnoreCase("catalogue.oe")) {
+
                 vueReponse = listerOeuvres(request);
+
             } else if (demande.equalsIgnoreCase("supprimer.oe")) {
+
                 vueReponse = supprimerOeuvre(request);
+
             }
 
         } catch (Exception e) {
@@ -63,12 +82,7 @@ public class slOeuvres extends HttpServlet {
         } finally {
             request.setAttribute("erreurR", erreur);
             request.setAttribute("pageR", vueReponse);
-            HttpSession session = request.getSession(true);
-            Object sessionScope = session.getAttribute("userS");
-            ProprietaireDAO user = (ProprietaireDAO) sessionScope;
-            if (user != null) {
-                request.setAttribute("sessionScope.userId", 1);
-            }
+
             RequestDispatcher dsp = request.getRequestDispatcher(vueReponse);
             if (vueReponse.contains(".oe")) {
                 dsp = request.getRequestDispatcher(vueReponse);
@@ -87,7 +101,7 @@ public class slOeuvres extends HttpServlet {
      */
     private String enregistrerOeuvre(HttpServletRequest request) throws Exception {
 
-       String vueReponse;
+        String vueReponse;
         int id_oeuvre;
         try {
             OeuvreDAO oeuvreDAO = new OeuvreDAO();
@@ -96,7 +110,7 @@ public class slOeuvres extends HttpServlet {
             oeuvre.setId_oeuvre(id_oeuvre);
             oeuvre.setTitre(request.getParameter("txtTitre"));
             oeuvre.setPrix(Double.parseDouble(request.getParameter("txtPrix")));
-            
+
             String id = request.getParameter("lProprietaires");
             int id_proprietaire = Integer.parseInt(id);
             oeuvre.setId_proprietaire(id_proprietaire);
@@ -106,24 +120,24 @@ public class slOeuvres extends HttpServlet {
             } else {
                 oeuvreDAO.ajouter(oeuvre);
             }
-            vueReponse = "/home.jsp";            
+            vueReponse = "/home.jsp";
             HttpSession session = request.getSession(true);
-           // String userId = session.getAttribute("userS").toString();
+            // String userId = session.getAttribute("userS").toString();
             // Après une modification l'administrateur accède
             // à la liste des utilisateur alors qu'un utilisateur
             // lambda retourne à la page home
-            
-             vueReponse = "catalogue.oe";
+
+            vueReponse = "catalogue.oe";
             return (vueReponse);
         } catch (Exception e) {
             throw e;
         }
-    }    
-    
-private String creerOeuvre(HttpServletRequest request) throws Exception {
+    }
+
+    private String creerOeuvre(HttpServletRequest request) throws Exception {
         Oeuvre oeuvre;
         ProprietaireDAO proprietaireDAO;
-        List<Proprietaire> lProprietaire;     
+        List<Proprietaire> lProprietaire;
         String vueReponse;
         try {
             oeuvre = new Oeuvre();
@@ -138,10 +152,9 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
             return (vueReponse);
         } catch (Exception e) {
             throw e;
-        
+
         }
-    }    
-     
+    }
 
     /**
      * Lit et affiche une oeuvre pour pouvoir la modifier
@@ -156,6 +169,7 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
         List<Proprietaire> lProprietaires;
         ProprietaireDAO proprietaireDAO;
         String vueReponse;
+
         int id_oeuvre;
         try {
             vueReponse = "/login.jsp";
@@ -177,9 +191,6 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
             throw e;
         }
     }
-    
-        
-       
 
     /**
      * Supprimer une oeuvre
@@ -193,20 +204,21 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
         OeuvreDAO oeuvreDAO;
         Oeuvre oeuvre;
         int id_oeuvre;
-        titre="";
-        
-        try {  
+        titre = "";
+
+        try {
             id_oeuvre = Integer.parseInt(request.getParameter("id"));
             oeuvreDAO = new OeuvreDAO();
             oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
             oeuvreDAO.Supprimer(oeuvre);
             vueReponse = "catalogue.oe";
             return (vueReponse);
-            
+
         } catch (Exception e) {
             erreur = e.getMessage();
-            if(erreur.contains("FK_RESERVATION_OEUVRE"))
-                   erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";            
+            if (erreur.contains("FK_RESERVATION_OEUVRE")) {
+                erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";
+            }
             throw new Exception(erreur);
         }
     }
@@ -219,8 +231,6 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
      * @return String page de redirection
      * @throws Exception
      */
-    
-
     /**
      * Vérifie que l'utilisateur a saisi le bon login et mot de passe
      *
@@ -244,7 +254,13 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
                 pageReponse = "/home.jsp";
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userS", user);
+                session.setAttribute("roleS", proprietaire.getNom_proprietaire());
                 request.setAttribute("userR", user);
+                Proprietaire pro = user.getProprietaire();
+                if (pro.getNom_proprietaire().equals("Administrateur") ) {
+                    session.setAttribute("adminS", pro.getNom_proprietaire());
+                }
+
             } else {
                 erreur = "Login ou mot de passe inconnus !";
             }
@@ -296,35 +312,31 @@ private String creerOeuvre(HttpServletRequest request) throws Exception {
      * @throws Exception
      */
     private String listerOeuvres(HttpServletRequest request) throws Exception {
-        
-         List<Oeuvre> lOeuvres = new ArrayList<>();
-         OeuvreDAO oeuvre = new OeuvreDAO();
-        
-        String pageReponse="/catalogue.jsp" ;
+
+        List<Oeuvre> lOeuvres = new ArrayList<>();
+        OeuvreDAO oeuvre = new OeuvreDAO();
+
+        String pageReponse = "/catalogue.jsp";
         try {
 
             lOeuvres = oeuvre.listeOeuvres();
             pageReponse = "/catalogue.jsp";
             HttpSession session = request.getSession(true);
             request.setAttribute("lstOeuvresR", lOeuvres);
-    }
-    catch (Exception e) {
+        } catch (Exception e) {
             erreur = e.getMessage();
-    }
-
-    
-        finally {
+        } finally {
             return (pageReponse);
+        }
     }
-}
 
-/**
- * Extrait le texte de la demande de l'URL
- *
- * @param request
- * @return String texte de la demande
- */
-private String getDemande(HttpServletRequest request) {
+    /**
+     * Extrait le texte de la demande de l'URL
+     *
+     * @param request
+     * @return String texte de la demande
+     */
+    private String getDemande(HttpServletRequest request) {
         String demande = "";
         demande = request.getRequestURI();
         demande = demande.substring(demande.lastIndexOf("/") + 1);
@@ -332,38 +344,41 @@ private String getDemande(HttpServletRequest request) {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-        protected void doGet(HttpServletRequest request, HttpServletResponse response)
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
     @Override
-        protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
             throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override
-        public String getServletInfo() {
+    public String getServletInfo() {
         return "Short description";
     }// </editor-fold>
 }
