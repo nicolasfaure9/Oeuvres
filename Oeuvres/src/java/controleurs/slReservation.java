@@ -151,8 +151,8 @@ public class slReservation extends HttpServlet {
           
             
             ReservationDAO reservationDAO = new ReservationDAO();
-            Reservation reservation = new Reservation(adherent.getId_adherent(), oeuvre.getId_oeuvre(), date);
-            reservationDAO.ajouter(reservation);
+            //Reservation reservation = new Reservation(adherent.getId_adherent(), oeuvre.getId_oeuvre(), date);
+            //reservationDAO.ajouter(reservation);
             
             return ("listeReservations.res");
         } catch (Exception e) {
