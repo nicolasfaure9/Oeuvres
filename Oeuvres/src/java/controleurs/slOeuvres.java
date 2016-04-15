@@ -45,6 +45,9 @@ public class slOeuvres extends HttpServlet {
             Object sessionScope = session.getAttribute("userS");
             ProprietaireDAO user = (ProprietaireDAO) sessionScope;
 
+            Object sessionScope2 = session.getAttribute("adminS");
+            String admin = (String) sessionScope2;
+
             if (user != null) {
                 request.setAttribute("sessionScope.userId", 1);
             }
@@ -54,27 +57,20 @@ public class slOeuvres extends HttpServlet {
                     vueReponse = connecter(request);
                 }
                 vueReponse = login(request);
-
             } else if (demande.equalsIgnoreCase("deconnecter.oe")) {
                 vueReponse = deconnecter(request);
-            } else if (demande.equalsIgnoreCase("ajouter.oe")) {
-
-                vueReponse = creerOeuvre(request);
-
-            } else if (demande.equalsIgnoreCase("enregistrer.oe")) {
-                vueReponse = enregistrerOeuvre(request);
-            } else if (demande.equalsIgnoreCase("modifier.oe")) {
-
-                vueReponse = modifierOeuvre(request);
-
             } else if (demande.equalsIgnoreCase("catalogue.oe")) {
-
                 vueReponse = listerOeuvres(request);
-
-            } else if (demande.equalsIgnoreCase("supprimer.oe")) {
-
-                vueReponse = supprimerOeuvre(request);
-
+            } else if (admin != null) {
+                if (demande.equalsIgnoreCase("ajouter.oe")) {
+                    vueReponse = creerOeuvre(request);
+                } else if (demande.equalsIgnoreCase("enregistrer.oe")) {
+                    vueReponse = enregistrerOeuvre(request);
+                } else if (demande.equalsIgnoreCase("modifier.oe")) {
+                    vueReponse = modifierOeuvre(request);
+                } else if (demande.equalsIgnoreCase("supprimer.oe")) {
+                    vueReponse = supprimerOeuvre(request);
+                }
             }
 
         } catch (Exception e) {
@@ -254,10 +250,9 @@ public class slOeuvres extends HttpServlet {
                 pageReponse = "/home.jsp";
                 HttpSession session = request.getSession(true);
                 session.setAttribute("userS", user);
-                session.setAttribute("roleS", proprietaire.getNom_proprietaire());
                 request.setAttribute("userR", user);
                 Proprietaire pro = user.getProprietaire();
-                if (pro.getNom_proprietaire().equals("Administrateur") ) {
+                if (pro.getNom_proprietaire().equals("Administrateur")) {
                     session.setAttribute("adminS", pro.getNom_proprietaire());
                 }
 
@@ -276,6 +271,7 @@ public class slOeuvres extends HttpServlet {
         try {
             HttpSession session = request.getSession(true);
             session.setAttribute("userS", null);
+            session.setAttribute("adminS",null);
             vueReponse = "/home.jsp";
             return (vueReponse);
         } catch (Exception e) {

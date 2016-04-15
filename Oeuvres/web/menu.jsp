@@ -19,9 +19,9 @@
                             <a class="dropdown-toggle" data-toggle="dropdown">Oeuvres<b class="caret"></b></a>
                             <ul class="dropdown-menu">
                                 <li><a href="catalogue.oe">Lister</a></li>
-                                
-                                <li><a href="ajouter.oe" data-toggle="modal"data-target="#oeuvre">Ajouter</a></li>
-                                
+                                    <c:if test="${sessionScope.adminS != null}">
+                                    <li><a href="ajouter.oe" data-toggle="modal"data-target="#oeuvre">Ajouter</a></li>
+                                    </c:if>
                             </ul>
                         </li>                           
                     </ul> 
@@ -32,10 +32,10 @@
                 <ul class="nav navbar-nav navbar-right"> 
                     <c:if test="${sessionScope.userS != null}">
                         <li><a href="deconnecter.oe">Se déconnecter</a></li>
-                    </c:if>  
-                    <c:if test="${sessionScope.userS == null}">                   
+                        </c:if>  
+                        <c:if test="${sessionScope.userS == null}">                   
                         <li><a href="login.oe">Se connecter</a></li>
-                    </c:if>  
+                        </c:if>  
                 </ul>
             </div>
         </div>
@@ -43,18 +43,18 @@
 </div><!--/.container-fluid -->
 
 <!-- Modal -->
-    <div class="modal fade" id="oeuvre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-lg">
-            <div class="modal-content"  id="modal-content">
-                <div class="modal-header">
-                </div>
-                <div class="modal-body">
+<div class="modal fade" id="oeuvre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content"  id="modal-content">
+            <div class="modal-header">
+            </div>
+            <div class="modal-body">
 
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
-                    <button type="button" class="btn btn-primary" id="modalBtnModifier">Modifier</button>
-                </div>
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-primary" id="modalBtnModifier">Modifier</button>
+            </div>
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->

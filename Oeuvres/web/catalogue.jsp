@@ -21,32 +21,34 @@
                                 <td>${oeuvre.titre}</td>
                                 <td>${oeuvre.prix}</td>
                                 <td>${oeuvre.proprietaire.prenom_proprietaire}    ${oeuvre.proprietaire.nom_proprietaire}</td>
-                               
-                                <td><a class="btn btn-success btn-xs glyphicon glyphicon-shopping-cart" href="reserver.res?id=${oeuvre.id_oeuvre}" title="Réserver"></a>
+                                <c:if test="${sessionScope.adminS != null}">
+                                    <td>
+                                        <a class="btn btn-success btn-xs glyphicon glyphicon-shopping-cart" href="reserver.res?id=${oeuvre.id_oeuvre}" title="Réserver"></a>
 
-                                <a class="btnModifier btn btn-info btn-xs glyphicon glyphicon-edit" href="modifier.oe?id=${oeuvre.id_oeuvre}" data-toggle="modal"data-target="#oeuvre" title="Modifier"></a>
+                                        <a class="btnModifier btn btn-info btn-xs glyphicon glyphicon-edit" href="modifier.oe?id=${oeuvre.id_oeuvre}" data-toggle="modal"data-target="#oeuvre" title="Modifier"></a>
 
-                                    <button type="button" class="btn btn-danger btn-xs" title="Supprimer" data-toggle="modal" data-target="#articleDialog${oeuvre.id_oeuvre}"><span class="glyphicon glyphicon-remove"></span>
-                                    </button>
-                                    <div class="modal fade" id="articleDialog${oeuvre.id_oeuvre}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                        <div class="modal-dialog">
-                                            <div class="modal-content">
-                                                <div class="modal-header">
-                                                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="history.go(0)">&times;</button>
-                                                    <h4 class="modal-title" id="myModalLabel">Confirmation requise</h4>
-                                                </div>
-                                                <div class="modal-body">
-                                                    Voulez vous vraiment supprimer cette oeuvre ?
-                                                </div>
-                                                <div class="modal-footer">
-                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
-                                                    <a href="supprimer.oe?id=${oeuvre.id_oeuvre}" class="btn btn-danger">Confirmer</a>
+                                        <button type="button" class="btn btn-danger btn-xs" title="Supprimer" data-toggle="modal" data-target="#articleDialog${oeuvre.id_oeuvre}"><span class="glyphicon glyphicon-remove"></span>
+                                        </button>
+                                        <div class="modal fade" id="articleDialog${oeuvre.id_oeuvre}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <div class="modal-header">
+                                                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" onClick="history.go(0)">&times;</button>
+                                                        <h4 class="modal-title" id="myModalLabel">Confirmation requise</h4>
+                                                    </div>
+                                                    <div class="modal-body">
+                                                        Voulez vous vraiment supprimer cette oeuvre ?
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Annuler</button>
+                                                        <a href="supprimer.oe?id=${oeuvre.id_oeuvre}" class="btn btn-danger">Confirmer</a>
+                                                    </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    </div>
 
-                                    </a></td>                     
+                                        </a></td>  
+                                    </c:if>
                             </tr>
                         </c:forEach>
                     </tbody>
@@ -57,7 +59,7 @@
     <!-- Modal -->
     <div class="modal fade" id="oeuvre" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-lg">
-            
-            </div><!-- /.modal-content -->
-        </div><!-- /.modal-dialog -->
-    </div><!-- /.modal -->
+
+        </div><!-- /.modal-content -->
+    </div><!-- /.modal-dialog -->
+</div><!-- /.modal -->
