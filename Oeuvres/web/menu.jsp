@@ -16,13 +16,15 @@
                 <c:if test="${sessionScope.userS != null}">
                     <ul class="nav navbar-nav">
                         <li class="dropdown">
-                            <a class="dropdown-toggle" data-toggle="dropdown">Oeuvres<b class="caret"></b></a>
-                            <ul class="dropdown-menu">
-                                <li><a href="catalogue.oe">Lister</a></li>
-                                    <c:if test="${sessionScope.adminS != null}">
+                            <c:if test="${sessionScope.adminS != null}">
+                                <a class="dropdown-toggle" data-toggle="dropdown">Oeuvres<b class="caret"></b></a>
+                                <ul class="dropdown-menu">
+                                    <li><a href="catalogue.oe">Lister</a></li>
+
                                     <li><a href="ajouter.oe" data-toggle="modal"data-target="#oeuvre">Ajouter</a></li>
-                                    </c:if>
-                            </ul>
+
+                                </ul>
+                            </c:if>
                         </li>                           
                     </ul> 
                     <ul class="nav navbar-nav">

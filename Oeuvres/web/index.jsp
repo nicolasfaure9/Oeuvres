@@ -14,7 +14,7 @@
     </head>
     <body class="body">       
         <div class="container">
-            
+            <h1 align="center">Gestion des oeuvres</h1>
             <c:import url="/bootstrap.jsp"/>
       <c:import url="/menu.jsp"/>
             <div>

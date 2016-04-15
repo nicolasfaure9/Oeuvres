@@ -59,8 +59,7 @@ public class slOeuvres extends HttpServlet {
                 vueReponse = login(request);
             } else if (demande.equalsIgnoreCase("deconnecter.oe")) {
                 vueReponse = deconnecter(request);
-            } else if (demande.equalsIgnoreCase("catalogue.oe")) {
-                vueReponse = listerOeuvres(request);
+
             } else if (admin != null) {
                 if (demande.equalsIgnoreCase("ajouter.oe")) {
                     vueReponse = creerOeuvre(request);
@@ -70,6 +69,8 @@ public class slOeuvres extends HttpServlet {
                     vueReponse = modifierOeuvre(request);
                 } else if (demande.equalsIgnoreCase("supprimer.oe")) {
                     vueReponse = supprimerOeuvre(request);
+                } else if (demande.equalsIgnoreCase("catalogue.oe")) {
+                    vueReponse = listerOeuvres(request);
                 }
             }
 
@@ -271,7 +272,7 @@ public class slOeuvres extends HttpServlet {
         try {
             HttpSession session = request.getSession(true);
             session.setAttribute("userS", null);
-            session.setAttribute("adminS",null);
+            session.setAttribute("adminS", null);
             vueReponse = "/home.jsp";
             return (vueReponse);
         } catch (Exception e) {
