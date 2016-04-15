@@ -25,8 +25,8 @@ public class ReservationDAO extends Dao{
     }
 
     /**
-     * Liste des Categories
-     * @return Collection de Categorie
+     * Liste des Reservations
+     * @return Collection de Reservations
      * @throws Exception 
      */
     public List<Reservation> listeReservations() throws Exception {

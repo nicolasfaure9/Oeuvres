@@ -5,6 +5,8 @@
 
 package controleurs;
 
+import dao.AdherentDAO;
+import dao.OeuvreDAO;
 import dao.ReservationDAO;
 import java.io.IOException;
 import java.util.ArrayList;
@@ -153,7 +155,17 @@ public class slReservation extends HttpServlet {
      * @throws Exception
      */
     private String reserverOeuvre(HttpServletRequest request) throws Exception {
+
         try {
+            OeuvreDAO oeuvre = new OeuvreDAO();
+            AdherentDAO adherent = new AdherentDAO();
+            
+            int id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            Oeuvre oeuvreR = oeuvre.lire_Id(id_oeuvre);
+            List<Adherent> lAdherents = adherent.listeAdherents();
+            
+            request.setAttribute("oeuvreR", oeuvreR); 
+            request.setAttribute("lstAdherentsR", lAdherents); 
             
             return ("/reservation.jsp");
         } catch (Exception e) {

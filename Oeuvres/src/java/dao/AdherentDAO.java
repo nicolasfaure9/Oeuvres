@@ -36,7 +36,38 @@ public class AdherentDAO extends Dao{
             throw e;
         } 
     }
-        
+        /**
+     * Liste des Adherents
+     * @return Collection de Adherents
+     * @throws Exception 
+     */
+    public List<Adherent> listeAdherents() throws Exception {
+        // la méthode lecture() attend ce paramètre
+        Map mParams = new HashMap();
+        Map mParam = new HashMap();
+        mParams.put(0, mParam);
+        // Dictionnaire recevant les enregistrements lus
+        Map mResults;
+        // La collection de User à retourner
+        List<Adherent> lAdherents = new ArrayList<Adherent>();
+        try {
+            String requete = "select * from adherent";
+            
+            mResults = lecture(requete, mParams);
+            // Chaque enregistrement est référencé par un indice
+            // Pour chaque item du Dictionnaire
+            for (Object record :mResults.keySet()) {
+                // On récuprère le Dictionnaire de l'enregistrement
+                Map mRecord = (Map)mResults.get(record);
+                // On l'envoie pour affectation des données portées
+                // à l'objet Métier Oeuvre qui ajouté à la Collection
+                lAdherents.add(setProperties(mRecord));
+            }
+            return (lAdherents);
+        } catch (Exception e) {
+            throw e;
+        } 
+    }
     private Adherent setProperties(Map mRecord) throws Exception {
 
         Adherent adherent = new Adherent();
