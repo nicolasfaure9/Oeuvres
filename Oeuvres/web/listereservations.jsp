@@ -18,7 +18,7 @@
                 <td>Supprimer</td>
             </tr>
         </thead>
-        <tbody>
+        <tbody>        
             <c:forEach var="reservation" items="${lstReservationsR}">
                 <tr>
                     <td>${reservation.oeuvre.titre}</td>
@@ -29,7 +29,7 @@
                     <td><a class="btn btn-primary" href="confirmerReservation.res?id=${reservation.id_oeuvre}&dateres='<fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="yyyy-MM-dd"/>'">Confirmer</a></td>
                     <td><a class="btn btn-primary" href="supprimerReservation.res?id=${reservation.id_oeuvre}&dateres='<fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="yyyy-MM-dd"/>'">Supprimer</a></td>                    
                 </tr>
-            </c:forEach>                    
+            </c:forEach> 
         </tbody>
     </table>              
 </div>
