@@ -22,11 +22,16 @@
             <c:forEach var="reservation" items="${lstReservationsR}">
                 <tr>
                     <td>${reservation.oeuvre.titre}</td>
-                    <td><fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="yyyy-MM-dd"/></td>
+                    <td><fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="dd-MM-yyyy"/></td>
                     <td>${reservation.statut}</td>
                     <td>${reservation.adherent.prenom_adherent}</td>
                     <td>${reservation.adherent.nom_adherent}</td>
-                    <td><a class="btn btn-primary" href="confirmerReservation.res?id=${reservation.id_oeuvre}&dateres='<fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="yyyy-MM-dd"/>'">Confirmer</a></td>
+                    <c:if test="${reservation.statut == 'Attente'}">  
+                        <td><a class="btn btn-primary" href="confirmerReservation.res?id=${reservation.id_oeuvre}&dateres='<fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="yyyy-MM-dd"/>'">Confirmer</a></td>
+                    </c:if>
+                    <c:if test="${reservation.statut == 'Confirmée'}"> 
+                        <td><a class="btn btn-success disabled">Confirmée</a></td>
+                    </c:if>
                     <td><a class="btn btn-primary" href="supprimerReservation.res?id=${reservation.id_oeuvre}&dateres='<fmt:formatDate value="${reservation.date_reservation}" type="date" pattern="yyyy-MM-dd"/>'">Supprimer</a></td>                    
                 </tr>
             </c:forEach> 

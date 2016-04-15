@@ -11,7 +11,7 @@ import dao.ReservationDAO;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.sql.Timestamp;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -79,7 +79,18 @@ public class slReservation extends HttpServlet {
     private String confirmerReservation(HttpServletRequest request) throws Exception {
 
         try {
-
+            ReservationDAO reservationDAO = new ReservationDAO();
+            Reservation reservation = new Reservation();
+            
+            int id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date date = sdf1.parse(request.getParameter("dateres").replaceAll("'", ""));
+            java.sql.Date date_reservation = new java.sql.Date(date.getTime()); 
+            
+            reservation = reservationDAO.lire_reservation(id_oeuvre, date_reservation);
+            reservation.setStatut("Confirmée");
+            
+            reservationDAO.modifier_statut(reservation);
             return ("listeReservations.res");
         } catch (Exception e) {
             throw e;
@@ -135,7 +146,7 @@ public class slReservation extends HttpServlet {
      * @throws Exception
      */
     private String enregistrerReservation(HttpServletRequest request) throws Exception {
-        
+         
         try {
             OeuvreDAO oeuvreDAO = new OeuvreDAO();
             int id_oeuvre = Integer.parseInt(request.getParameter("id"));
@@ -147,19 +158,23 @@ public class slReservation extends HttpServlet {
             
             String txtDate = request.getParameter("txtDate");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-            Date date = sdf.parse(txtDate);
-          
+            Timestamp date = new Timestamp(sdf.parse(txtDate).getTime());
+            
             
             ReservationDAO reservationDAO = new ReservationDAO();
-            //Reservation reservation = new Reservation(adherent.getId_adherent(), oeuvre.getId_oeuvre(), date);
-            //reservationDAO.ajouter(reservation);
+            Reservation reservation = new Reservation(oeuvre.getId_oeuvre(),adherent.getId_adherent(), date);
+            reservationDAO.ajouter(reservation);
             
             return ("listeReservations.res");
         } catch (Exception e) {
             erreur = e.getMessage();
-            if(erreur.contains("PRIMARY"))
-              //  erreur = "L'oeuvre " + titre + " a déjà été réservée pour le : " + date + " !";      
-                erreur="";
+            if(erreur.contains("PRIMARY")){
+                OeuvreDAO oeuvreDAO = new OeuvreDAO();
+                int id_oeuvre = Integer.parseInt(request.getParameter("id"));
+                Oeuvre oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
+                    erreur = "L'oeuvre " + oeuvre.getTitre() + " a déjà été réservée pour le : " + request.getParameter("txtDate") + " !";      
+            }
+
             throw new Exception(erreur);
         }
     }

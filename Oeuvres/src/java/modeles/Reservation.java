@@ -1,10 +1,12 @@
 package modeles;
 
+import java.sql.Date;
+
 public class Reservation {
 
     private int id_oeuvre;
     private int id_adherent;
-    private java.util.Date date_reservation;
+    private java.sql.Timestamp date_reservation;
     private String statut;
     private Adherent adherent;
     private Oeuvre oeuvre;
@@ -20,12 +22,12 @@ public class Reservation {
      * @param id_adherent Id de l'adhérent réservant
      * @throws Exception
      */
-    public Reservation(int id_oeuvre, int id_adherent) throws Exception {
+    public Reservation(int id_oeuvre, int id_adherent,java.sql.Timestamp date) throws Exception {
         setId_oeuvre(id_oeuvre);
         setId_adherent(id_adherent);
 //        this.setAdherent(new Adherent().lire_Id(id_adherent));
 //        this.setOeuvre(new Oeuvre().lire_Id(id_oeuvre));
-        this.setDate_reservation(date_reservation);
+        this.setDate_reservation(date);
         this.setStatut(statut);
     }
     
@@ -61,10 +63,10 @@ public class Reservation {
     public void setId_adherent(int id_adherent) {
         this.id_adherent = id_adherent;
     }
-    public java.util.Date getDate_reservation() {
+    public java.sql.Timestamp getDate_reservation() {
         return date_reservation;
     }
-    public void setDate_reservation(java.util.Date date_reservation) throws Exception {
+    public void setDate_reservation(java.sql.Timestamp date_reservation) throws Exception {
         this.date_reservation = date_reservation;
     }
     // </editor-fold> 
