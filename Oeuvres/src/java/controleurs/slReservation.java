@@ -9,7 +9,9 @@ import dao.AdherentDAO;
 import dao.OeuvreDAO;
 import dao.ReservationDAO;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -135,6 +137,22 @@ public class slReservation extends HttpServlet {
     private String enregistrerReservation(HttpServletRequest request) throws Exception {
         
         try {
+            OeuvreDAO oeuvreDAO = new OeuvreDAO();
+            int id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            Oeuvre oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
+
+            AdherentDAO adherentDAO = new AdherentDAO();
+            int id_adherent = Integer.parseInt(request.getParameter("lstAdherents"));
+            Adherent adherent = adherentDAO.lire_Id(id_adherent);
+            
+            String txtDate = request.getParameter("txtDate");
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            Date date = sdf.parse(txtDate);
+          
+            
+            ReservationDAO reservationDAO = new ReservationDAO();
+            Reservation reservation = new Reservation(adherent.getId_adherent(), oeuvre.getId_oeuvre(), date);
+            reservationDAO.ajouter(reservation);
             
             return ("listeReservations.res");
         } catch (Exception e) {
