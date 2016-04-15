@@ -5,7 +5,10 @@
 
 package controleurs;
 
+import dao.ReservationDAO;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
@@ -97,11 +100,27 @@ public class slReservation extends HttpServlet {
      */
     private String listeReservations(HttpServletRequest request) throws Exception {
         
+         List<Reservation> lReservations = new ArrayList<>();
+         ReservationDAO reservations = new ReservationDAO();
+        
+        String pageReponse="/listereservations.jsp" ;
         try {
 
-            return ("/listereservations.jsp");
-        } catch (Exception e) {
-            throw e;
+            lReservations = reservations.listeReservations();
+            pageReponse = "/listereservations.jsp";
+            HttpSession session = request.getSession(true);
+            if(lReservations.isEmpty())
+                erreur="Aucune réservation actuellement";
+            else{
+                request.setAttribute("lstReservationsR", lReservations);
+            }
+        }
+        catch (Exception e) {
+                erreur = e.getMessage();
+        }
+
+        finally {
+            return (pageReponse);
         }
     }
 

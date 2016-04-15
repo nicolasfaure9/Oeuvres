@@ -16,4 +16,39 @@ import java.util.Map;
  */
 public class AdherentDAO extends Dao{
     
+        public Adherent lire_Id(int id) throws Exception {
+        Map mParams = new HashMap();
+        Map mParam;
+        Map mResults;
+        try {
+            String requete = "select * from adherent where id_adherent = ?";
+            mParam = new HashMap();
+            mParam.put(1, id);
+            mParams.put(0, mParam);            
+            mResults = lecture(requete, mParams);
+            if (mResults.size() > 0) {
+                Map mRecord = (Map)mResults.get(0);
+                return(setProperties(mRecord));
+            }  else {
+                throw new Exception("oeuvre inconnue !");
+            }
+        } catch (Exception e) {
+            throw e;
+        } 
+    }
+        
+    private Adherent setProperties(Map mRecord) throws Exception {
+
+        Adherent adherent = new Adherent();
+        try {
+
+            adherent.setNom_adherent(((mRecord.get("nom_adherent"))).toString());
+            adherent.setId_adherent(((Integer)(mRecord.get("id__adherent"))).intValue());
+            adherent.setPrenom_adherent((((mRecord.get("prenom_adherent"))).toString()));
+
+            return (adherent);
+        } catch (Exception e) {
+            throw e;
+        }
+    }  
 }
