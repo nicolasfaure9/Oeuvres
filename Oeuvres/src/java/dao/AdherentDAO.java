@@ -30,7 +30,7 @@ public class AdherentDAO extends Dao{
                 Map mRecord = (Map)mResults.get(0);
                 return(setProperties(mRecord));
             }  else {
-                throw new Exception("oeuvre inconnue !");
+                throw new Exception("adherent inconnue !");
             }
         } catch (Exception e) {
             throw e;
@@ -43,7 +43,7 @@ public class AdherentDAO extends Dao{
         try {
 
             adherent.setNom_adherent(((mRecord.get("nom_adherent"))).toString());
-            adherent.setId_adherent(((Integer)(mRecord.get("id__adherent"))).intValue());
+            adherent.setId_adherent(((Integer)(mRecord.get("id_adherent"))).intValue());
             adherent.setPrenom_adherent((((mRecord.get("prenom_adherent"))).toString()));
 
             return (adherent);
