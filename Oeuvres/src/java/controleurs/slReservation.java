@@ -100,7 +100,16 @@ public class slReservation extends HttpServlet {
     private String supprimerReservation(HttpServletRequest request) throws Exception {
         
         try {
-
+            ReservationDAO reservationDAO = new ReservationDAO();
+            Reservation reservation = new Reservation();
+            
+            int id_oeuvre = Integer.parseInt(request.getParameter("id"));
+            SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
+            java.util.Date date = sdf1.parse(request.getParameter("dateres").replaceAll("'", ""));
+            java.sql.Date date_reservation = new java.sql.Date(date.getTime()); 
+            
+            reservation = reservationDAO.lire_reservation(id_oeuvre, date_reservation);
+            reservationDAO.Supprimer(reservation);
             return ("listeReservations.res");
         } catch (Exception e) {         
             throw e;

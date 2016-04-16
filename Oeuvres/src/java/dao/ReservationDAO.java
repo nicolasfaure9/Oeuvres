@@ -139,6 +139,29 @@ public class ReservationDAO extends Dao{
             throw e;
         } 
     }
+         public void Supprimer(Reservation reservation) throws Exception {
+        // Dictionnaire des paramètres qui seront
+        // affectés à la requête
+      // Dictionnaire des paramètres qui seront
+        // affectés à la requête
+        Map mParams = new HashMap();
+        Map mParam;
+        try {
+            String requete = "delete from reservation where id_oeuvre = ? and date_reservation = ?";
+            // On ajoute chaque paramètre au Dictionnaire
+            // en spécifiant sa place dans la requête
+            mParam = new HashMap();            
+            
+            mParam.put(1, reservation.getId_oeuvre());
+            java.sql.Date date_reservation = new java.sql.Date(reservation.getDate_reservation().getTime());
+            mParam.put(2, date_reservation);
+            mParams.put(0, mParam);            
+            // Mise à jour dans la BdD
+            ecriture(requete, mParams);
+        } catch (Exception e) {
+            throw e;
+        } 
+    }
         private Reservation setProperties(Map mRecord) throws Exception {
         
         Reservation reservation = new Reservation();
