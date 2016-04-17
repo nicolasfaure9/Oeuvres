@@ -14,13 +14,11 @@
     </head>
     <body class="body">       
         <div class="container">
-           
+
             <c:import url="/bootstrap.jsp"/>
-      <c:import url="/menu.jsp"/>
+            <c:import url="/menu.jsp"/>
             <div>
-                <c:if test="${pageR != null}">
-                    <c:import url="${pageR}"/>
-                </c:if>
+               
                 <c:if test="${erreurR != null}">
                     <c:import url="/erreur.jsp"/>
                 </c:if>   

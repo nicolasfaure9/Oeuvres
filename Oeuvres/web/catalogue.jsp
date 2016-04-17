@@ -23,7 +23,7 @@
                                 <td>${oeuvre.proprietaire.prenom_proprietaire}    ${oeuvre.proprietaire.nom_proprietaire}</td>
 
                                 <td>
-                                    <a class="btn btn-success btn-xs glyphicon glyphicon-shopping-cart" href="reserver.res?id=${oeuvre.id_oeuvre}" title="Réserver"></a>
+                                    <a class="btn btn-success btn-xs glyphicon glyphicon-shopping-cart" href="reserver.res?id=${oeuvre.id_oeuvre}" data-toggle="modal"data-target="#oeuvre" title="Réserver"></a>
 
                                     <a class="btnModifier btn btn-info btn-xs glyphicon glyphicon-edit" href="modifier.oe?id=${oeuvre.id_oeuvre}" data-toggle="modal"data-target="#oeuvre" title="Modifier"></a>
 

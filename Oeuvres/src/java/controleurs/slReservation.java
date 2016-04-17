@@ -62,7 +62,7 @@ public class slReservation extends HttpServlet {
         } finally {
             request.setAttribute("erreurR", erreur);
             request.setAttribute("pageR", vueReponse); 
-            RequestDispatcher dsp = request.getRequestDispatcher("/index.jsp");
+            RequestDispatcher dsp = request.getRequestDispatcher(vueReponse);
             if (vueReponse.contains(".res"))
                 dsp = request.getRequestDispatcher(vueReponse);
             dsp.forward(request, response);
