@@ -2,11 +2,11 @@
  * To change this template, choose Tools | Templates
  * and open the template in the editor.
  */
-
 package controleurs;
 
 import dao.AdherentDAO;
 import dao.OeuvreDAO;
+import dao.ProprietaireDAO;
 import dao.ReservationDAO;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
@@ -26,52 +26,70 @@ import modeles.*;
  *
  * @author alain
  */
-
 public class slReservation extends HttpServlet {
-   
-    /** 
-     * Processes requests for both HTTP <code>GET</code> and <code>POST</code> methods.
+
+    /**
+     * Processes requests for both HTTP <code>GET</code> and <code>POST</code>
+     * methods.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
      * @throws IOException if an I/O error occurs
      */
-
     private String erreur;
 
     protected void processRequest(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         String demande;
         String vueReponse = "/home.jsp";
         erreur = "";
+        HttpSession session = request.getSession(true);
+        Object sessionScope = session.getAttribute("userS");
+        ProprietaireDAO user = (ProprietaireDAO) sessionScope;
+        Object sessionScope2 = session.getAttribute("adminS");
+        String admin = (String) sessionScope2;
+
         try {
             demande = getDemande(request);
-            if (demande.equalsIgnoreCase("reserver.res")) {
-                vueReponse = reserverOeuvre(request);
-            } else if (demande.equalsIgnoreCase("enregistrerReservation.res")) {
-                vueReponse = enregistrerReservation(request);
+
+            if (user == null) {
+                erreur = "Veuillez vous connectez";
+                vueReponse = "/login.jsp";
             } else if (demande.equalsIgnoreCase("listeReservations.res")) {
                 vueReponse = listeReservations(request);
-            } else if (demande.equalsIgnoreCase("confirmerReservation.res")) {
-                vueReponse = confirmerReservation(request);
-            } else if (demande.equalsIgnoreCase("supprimerReservation.res")) {
-                vueReponse = supprimerReservation(request);
+
+            } else if (admin != null) {
+                {
+                    if (demande.equalsIgnoreCase("reserver.res")) {
+                        vueReponse = reserverOeuvre(request);
+                    } else if (demande.equalsIgnoreCase("enregistrerReservation.res")) {
+                        vueReponse = enregistrerReservation(request);
+
+                    } else if (demande.equalsIgnoreCase("confirmerReservation.res")) {
+                        vueReponse = confirmerReservation(request);
+                    } else if (demande.equalsIgnoreCase("supprimerReservation.res")) {
+                        vueReponse = supprimerReservation(request);
+                    }
+                }
             }
         } catch (Exception e) {
             erreur = e.getMessage();
         } finally {
             request.setAttribute("erreurR", erreur);
-            request.setAttribute("pageR", vueReponse); 
+            request.setAttribute("pageR", vueReponse);
             RequestDispatcher dsp = request.getRequestDispatcher(vueReponse);
-            if (vueReponse.contains(".res"))
+            if (vueReponse.contains(".res")) {
                 dsp = request.getRequestDispatcher(vueReponse);
+            }
             dsp.forward(request, response);
         }
     }
 
     /**
-     * Transforme dans la base de données une réservation en Attente
-     * en une réservation Confirmée
+     * Transforme dans la base de données une réservation en Attente en une
+     * réservation Confirmée
+     *
      * @param request
      * @return String page de redirection
      * @throws Exception
@@ -81,15 +99,15 @@ public class slReservation extends HttpServlet {
         try {
             ReservationDAO reservationDAO = new ReservationDAO();
             Reservation reservation = new Reservation();
-            
+
             int id_oeuvre = Integer.parseInt(request.getParameter("id"));
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = sdf1.parse(request.getParameter("dateres").replaceAll("'", ""));
-            java.sql.Date date_reservation = new java.sql.Date(date.getTime()); 
-            
+            java.sql.Date date_reservation = new java.sql.Date(date.getTime());
+
             reservation = reservationDAO.lire_reservation(id_oeuvre, date_reservation);
             reservation.setStatut("Confirmée");
-            
+
             reservationDAO.modifier_statut(reservation);
             return ("listeReservations.res");
         } catch (Exception e) {
@@ -98,64 +116,63 @@ public class slReservation extends HttpServlet {
     }
 
     private String supprimerReservation(HttpServletRequest request) throws Exception {
-        
+
         try {
             ReservationDAO reservationDAO = new ReservationDAO();
             Reservation reservation = new Reservation();
-            
+
             int id_oeuvre = Integer.parseInt(request.getParameter("id"));
             SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
             java.util.Date date = sdf1.parse(request.getParameter("dateres").replaceAll("'", ""));
-            java.sql.Date date_reservation = new java.sql.Date(date.getTime()); 
-            
+            java.sql.Date date_reservation = new java.sql.Date(date.getTime());
+
             reservation = reservationDAO.lire_reservation(id_oeuvre, date_reservation);
             reservationDAO.Supprimer(reservation);
             return ("listeReservations.res");
-        } catch (Exception e) {         
+        } catch (Exception e) {
             throw e;
         }
-    }     
-    
+    }
+
     /**
      * liste des réservations en Attente
+     *
      * @param request
      * @return String page de redirection
      * @throws Exception
      */
     private String listeReservations(HttpServletRequest request) throws Exception {
-        
-         List<Reservation> lReservations = new ArrayList<>();
-         ReservationDAO reservations = new ReservationDAO();
-        
-        String pageReponse="/listereservations.jsp" ;
+
+        List<Reservation> lReservations = new ArrayList<>();
+        ReservationDAO reservations = new ReservationDAO();
+
+        String pageReponse = "/listereservations.jsp";
         try {
 
             lReservations = reservations.listeReservations();
             pageReponse = "/listereservations.jsp";
             HttpSession session = request.getSession(true);
-            if(lReservations.isEmpty())
-                erreur="Aucune réservation actuellement";
-            else{
+            if (lReservations.isEmpty()) {
+                erreur = "Aucune réservation actuellement";
+            } else {
                 request.setAttribute("lstReservationsR", lReservations);
             }
-        }
-        catch (Exception e) {
-                erreur = e.getMessage();
-        }
-
-        finally {
+        } catch (Exception e) {
+            erreur = e.getMessage();
+        } finally {
             return (pageReponse);
         }
     }
 
     /**
      * Enregistre une réservation et la met en Attente
+     *
      * @param request
      * @return
      * @throws Exception
      */
     private String enregistrerReservation(HttpServletRequest request) throws Exception {
-         
+
         try {
             OeuvreDAO oeuvreDAO = new OeuvreDAO();
             int id_oeuvre = Integer.parseInt(request.getParameter("id"));
@@ -164,24 +181,23 @@ public class slReservation extends HttpServlet {
             AdherentDAO adherentDAO = new AdherentDAO();
             int id_adherent = Integer.parseInt(request.getParameter("lstAdherents"));
             Adherent adherent = adherentDAO.lire_Id(id_adherent);
-            
+
             String txtDate = request.getParameter("txtDate");
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             Timestamp date = new Timestamp(sdf.parse(txtDate).getTime());
-            
-            
+
             ReservationDAO reservationDAO = new ReservationDAO();
-            Reservation reservation = new Reservation(oeuvre.getId_oeuvre(),adherent.getId_adherent(), date);
+            Reservation reservation = new Reservation(oeuvre.getId_oeuvre(), adherent.getId_adherent(), date);
             reservationDAO.ajouter(reservation);
-            
+
             return ("listeReservations.res");
         } catch (Exception e) {
             erreur = e.getMessage();
-            if(erreur.contains("PRIMARY")){
+            if (erreur.contains("PRIMARY")) {
                 OeuvreDAO oeuvreDAO = new OeuvreDAO();
                 int id_oeuvre = Integer.parseInt(request.getParameter("id"));
                 Oeuvre oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
-                    erreur = "L'oeuvre " + oeuvre.getTitre() + " a déjà été réservée pour le : " + request.getParameter("txtDate") + " !";      
+                erreur = "L'oeuvre " + oeuvre.getTitre() + " a déjà été réservée pour le : " + request.getParameter("txtDate") + " !";
             }
 
             throw new Exception(erreur);
@@ -189,9 +205,9 @@ public class slReservation extends HttpServlet {
     }
 
     /**
-     * Lit une oeuvre, l'affiche et initialise la liste des adhérents
-     * pour pouvoir saisir une réservation :
-     * Saisie date et sélection de l'adhérent
+     * Lit une oeuvre, l'affiche et initialise la liste des adhérents pour
+     * pouvoir saisir une réservation : Saisie date et sélection de l'adhérent
+     *
      * @param request
      * @return
      * @throws Exception
@@ -201,14 +217,14 @@ public class slReservation extends HttpServlet {
         try {
             OeuvreDAO oeuvre = new OeuvreDAO();
             AdherentDAO adherent = new AdherentDAO();
-            
+
             int id_oeuvre = Integer.parseInt(request.getParameter("id"));
             Oeuvre oeuvreR = oeuvre.lire_Id(id_oeuvre);
             List<Adherent> lAdherents = adherent.listeAdherents();
-            
-            request.setAttribute("oeuvreR", oeuvreR); 
-            request.setAttribute("lstAdherentsR", lAdherents); 
-            
+
+            request.setAttribute("oeuvreR", oeuvreR);
+            request.setAttribute("lstAdherentsR", lAdherents);
+
             return ("/reservation.jsp");
         } catch (Exception e) {
             throw e;
@@ -217,6 +233,7 @@ public class slReservation extends HttpServlet {
 
     /**
      * Extrait le texte de la demande de l'URL
+     *
      * @param request
      * @return String texte de la demande
      */
@@ -228,8 +245,9 @@ public class slReservation extends HttpServlet {
     }
 
     // <editor-fold defaultstate="collapsed" desc="HttpServlet methods. Click on the + sign on the left to edit the code.">
-    /** 
+    /**
      * Handles the HTTP <code>GET</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -237,12 +255,13 @@ public class slReservation extends HttpServlet {
      */
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
-    } 
+    }
 
-    /** 
+    /**
      * Handles the HTTP <code>POST</code> method.
+     *
      * @param request servlet request
      * @param response servlet response
      * @throws ServletException if a servlet-specific error occurs
@@ -250,12 +269,13 @@ public class slReservation extends HttpServlet {
      */
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
+            throws ServletException, IOException {
         processRequest(request, response);
     }
 
-    /** 
+    /**
      * Returns a short description of the servlet.
+     *
      * @return a String containing servlet description
      */
     @Override

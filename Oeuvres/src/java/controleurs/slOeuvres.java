@@ -51,6 +51,7 @@ public class slOeuvres extends HttpServlet {
             if (user != null) {
                 request.setAttribute("sessionScope.userId", 1);
             }
+            
             if ((user == null) || (demande.equalsIgnoreCase("login.oe"))) {
 
                 if (demande.equalsIgnoreCase("connecter.oe")) {
