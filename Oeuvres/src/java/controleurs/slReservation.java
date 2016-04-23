@@ -49,7 +49,7 @@ public class slReservation extends HttpServlet {
         ProprietaireDAO user = (ProprietaireDAO) sessionScope;
         Object sessionScope2 = session.getAttribute("adminS");
         String admin = (String) sessionScope2;
-
+        
         try {
             demande = getDemande(request);
 

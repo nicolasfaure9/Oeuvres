@@ -5,6 +5,11 @@
     <body class="body">       
         <div class="container">
             <h1 align='center'>Catalogue des oeuvres</h1>
+            <c:if test="${requestScope.erreur != null}">
+                <div class="alert alert-danger">
+                    <strong>Erreur  ! ${requestScope.erreur} </strong> 
+                </div>
+            </c:if>
             <div class="table-responsive">
                 <table class="table table-hover table-condensed">
                     <thead>

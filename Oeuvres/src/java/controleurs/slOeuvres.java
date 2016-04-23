@@ -44,14 +44,14 @@ public class slOeuvres extends HttpServlet {
             HttpSession session = request.getSession(true);
             Object sessionScope = session.getAttribute("userS");
             ProprietaireDAO user = (ProprietaireDAO) sessionScope;
-
+           
             Object sessionScope2 = session.getAttribute("adminS");
             String admin = (String) sessionScope2;
 
             if (user != null) {
                 request.setAttribute("sessionScope.userId", 1);
             }
-            
+
             if ((user == null) || (demande.equalsIgnoreCase("login.oe"))) {
 
                 if (demande.equalsIgnoreCase("connecter.oe")) {
@@ -77,6 +77,7 @@ public class slOeuvres extends HttpServlet {
 
         } catch (Exception e) {
             erreur = e.getMessage();
+            vueReponse = "erreur.jsp";
         } finally {
             request.setAttribute("erreurR", erreur);
             request.setAttribute("pageR", vueReponse);
@@ -201,23 +202,27 @@ public class slOeuvres extends HttpServlet {
         String vueReponse, titre;
         OeuvreDAO oeuvreDAO;
         Oeuvre oeuvre;
+        vueReponse = "catalogue.oe";
         int id_oeuvre;
         titre = "";
-
+        
         try {
             id_oeuvre = Integer.parseInt(request.getParameter("id"));
             oeuvreDAO = new OeuvreDAO();
             oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
+            titre = oeuvre.getTitre();
             oeuvreDAO.Supprimer(oeuvre);
-            vueReponse = "catalogue.oe";
-            return (vueReponse);
+            
 
         } catch (Exception e) {
             erreur = e.getMessage();
             if (erreur.contains("FK_RESERVATION_OEUVRE")) {
                 erreur = "Il n'est pas possible de supprimer l'oeuvre : " + titre + " car elle a été réservée !";
+                request.setAttribute("erreur", erreur);
             }
             throw new Exception(erreur);
+        } finally {
+            return (vueReponse);
         }
     }
 
@@ -241,28 +246,33 @@ public class slOeuvres extends HttpServlet {
         Proprietaire proprietaire;
         String login, pwd;
         String pageReponse = "/login.jsp";
+        HttpSession session = request.getSession(true);
+        request.setAttribute("erreur", null);
         try {
 
             login = request.getParameter("txtLogin");
             pwd = request.getParameter("txtPwd");
             user = new ProprietaireDAO();
+
             if (user.connecter(login, pwd)) {
 
                 proprietaire = user.getProprietaire();
                 pageReponse = "/home.jsp";
-                HttpSession session = request.getSession(true);
+
                 session.setAttribute("userS", user);
                 request.setAttribute("userR", user);
                 Proprietaire pro = user.getProprietaire();
                 if (pro.getNom_proprietaire().equals("Administrateur")) {
                     session.setAttribute("adminS", pro.getNom_proprietaire());
                 }
-
+                
             } else {
                 erreur = "Login ou mot de passe inconnus !";
+                request.setAttribute("erreur", erreur);
             }
         } catch (Exception e) {
             erreur = e.getMessage();
+            request.setAttribute("erreur", erreur);
         } finally {
             return (pageReponse);
         }
@@ -274,6 +284,7 @@ public class slOeuvres extends HttpServlet {
             HttpSession session = request.getSession(true);
             session.setAttribute("userS", null);
             session.setAttribute("adminS", null);
+            
             vueReponse = "/home.jsp";
             return (vueReponse);
         } catch (Exception e) {

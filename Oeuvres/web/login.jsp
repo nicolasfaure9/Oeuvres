@@ -5,7 +5,13 @@
       <body class="body">       
         <div class="container">
 <h1 align='center'>Authentification</h1>
+<c:if test="${requestScope.erreur != null}">
+        <div class="alert alert-danger">
+            <strong>Connexion impossible ! ${requestScope.erreur} </strong> 
+</div>
+    </c:if>
 <div class="well">
+   
     <form class="form-signin form-horizontal" role="form" action="connecter.oe" method="post">
         <div class="form-group">
             <label class="col-md-3 control-label">Login : </label>
@@ -24,7 +30,8 @@
                 <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Valider</button>
             </div>
         </div>
-</div>
+
 
     </form>
+</div>
 </div>
