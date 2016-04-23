@@ -5,7 +5,18 @@
 <div  class="col-md-11 col-md-offset-1">
     <body class="body">       
         <div class="container">
-            <h1 align='center'>Liste des réservations</h1>             
+            <h1 align='center'>Liste des réservations</h1> 
+            <c:if test="${requestScope.erreur != null}">
+                <div class="alert alert-danger">
+                    <strong>Erreur  ! ${requestScope.erreur} </strong> 
+                </div>
+            </c:if>
+            
+            <c:if test="${requestScope.succes != null}">
+                <div class="alert alert-success">
+                    <strong>${requestScope.succes} </strong> 
+                </div>
+            </c:if>
             <div class="table-responsive">
                 <table class="table table-hover table-condensed">
                     <thead>

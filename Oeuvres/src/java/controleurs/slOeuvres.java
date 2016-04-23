@@ -44,7 +44,7 @@ public class slOeuvres extends HttpServlet {
             HttpSession session = request.getSession(true);
             Object sessionScope = session.getAttribute("userS");
             ProprietaireDAO user = (ProprietaireDAO) sessionScope;
-           
+
             Object sessionScope2 = session.getAttribute("adminS");
             String admin = (String) sessionScope2;
 
@@ -100,7 +100,8 @@ public class slOeuvres extends HttpServlet {
      */
     private String enregistrerOeuvre(HttpServletRequest request) throws Exception {
 
-        String vueReponse;
+        String vueReponse, message;
+        message = "";
         int id_oeuvre;
         try {
             OeuvreDAO oeuvreDAO = new OeuvreDAO();
@@ -125,8 +126,9 @@ public class slOeuvres extends HttpServlet {
             // Après une modification l'administrateur accède
             // à la liste des utilisateur alors qu'un utilisateur
             // lambda retourne à la page home
-
+            message = "Oeuvre enregistrée avec succès !";
             vueReponse = "catalogue.oe";
+            request.setAttribute("succes", message);
             return (vueReponse);
         } catch (Exception e) {
             throw e;
@@ -167,11 +169,12 @@ public class slOeuvres extends HttpServlet {
         OeuvreDAO oeuvreDAO;
         List<Proprietaire> lProprietaires;
         ProprietaireDAO proprietaireDAO;
-        String vueReponse;
-
+        String vueReponse, message;
+        message = "";
         int id_oeuvre;
         try {
             vueReponse = "/login.jsp";
+
             id_oeuvre = Integer.parseInt(request.getParameter("id"));
             if (id_oeuvre > 0) {
                 proprietaireDAO = new ProprietaireDAO();
@@ -182,12 +185,14 @@ public class slOeuvres extends HttpServlet {
                 request.setAttribute("lstProprietairesR", lProprietaires);
                 request.setAttribute("titre", "Modifier une oeuvre");
                 vueReponse = "/oeuvre.jsp";
+
             } else {
                 erreur = "Oeuvre inconnue !";
             }
             return (vueReponse);
         } catch (Exception e) {
             throw e;
+
         }
     }
 
@@ -199,21 +204,22 @@ public class slOeuvres extends HttpServlet {
      * @throws Exception
      */
     private String supprimerOeuvre(HttpServletRequest request) throws Exception {
-        String vueReponse, titre;
+        String vueReponse, titre,message;
         OeuvreDAO oeuvreDAO;
         Oeuvre oeuvre;
         vueReponse = "catalogue.oe";
+        message="";
         int id_oeuvre;
         titre = "";
-        
+
         try {
             id_oeuvre = Integer.parseInt(request.getParameter("id"));
             oeuvreDAO = new OeuvreDAO();
             oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
             titre = oeuvre.getTitre();
             oeuvreDAO.Supprimer(oeuvre);
-            
-
+            message ="Oeuvre supprimée avec succès !";
+            request.setAttribute("succes", message);
         } catch (Exception e) {
             erreur = e.getMessage();
             if (erreur.contains("FK_RESERVATION_OEUVRE")) {
@@ -265,7 +271,7 @@ public class slOeuvres extends HttpServlet {
                 if (pro.getNom_proprietaire().equals("Administrateur")) {
                     session.setAttribute("adminS", pro.getNom_proprietaire());
                 }
-                
+
             } else {
                 erreur = "Login ou mot de passe inconnus !";
                 request.setAttribute("erreur", erreur);
@@ -284,7 +290,7 @@ public class slOeuvres extends HttpServlet {
             HttpSession session = request.getSession(true);
             session.setAttribute("userS", null);
             session.setAttribute("adminS", null);
-            
+
             vueReponse = "/home.jsp";
             return (vueReponse);
         } catch (Exception e) {

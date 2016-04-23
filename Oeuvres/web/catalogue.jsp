@@ -10,6 +10,12 @@
                     <strong>Erreur  ! ${requestScope.erreur} </strong> 
                 </div>
             </c:if>
+            
+            <c:if test="${requestScope.succes != null}">
+                <div class="alert alert-success">
+                    <strong>${requestScope.succes} </strong> 
+                </div>
+            </c:if>
             <div class="table-responsive">
                 <table class="table table-hover table-condensed">
                     <thead>

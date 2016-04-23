@@ -49,7 +49,7 @@ public class slReservation extends HttpServlet {
         ProprietaireDAO user = (ProprietaireDAO) sessionScope;
         Object sessionScope2 = session.getAttribute("adminS");
         String admin = (String) sessionScope2;
-        
+
         try {
             demande = getDemande(request);
 
@@ -95,7 +95,7 @@ public class slReservation extends HttpServlet {
      * @throws Exception
      */
     private String confirmerReservation(HttpServletRequest request) throws Exception {
-
+        String message = "";
         try {
             ReservationDAO reservationDAO = new ReservationDAO();
             Reservation reservation = new Reservation();
@@ -107,7 +107,8 @@ public class slReservation extends HttpServlet {
 
             reservation = reservationDAO.lire_reservation(id_oeuvre, date_reservation);
             reservation.setStatut("Confirmée");
-
+            message = "Réservation confirmée !";
+            request.setAttribute("succes", message);
             reservationDAO.modifier_statut(reservation);
             return ("listeReservations.res");
         } catch (Exception e) {
@@ -116,7 +117,7 @@ public class slReservation extends HttpServlet {
     }
 
     private String supprimerReservation(HttpServletRequest request) throws Exception {
-
+        String message = "";
         try {
             ReservationDAO reservationDAO = new ReservationDAO();
             Reservation reservation = new Reservation();
@@ -128,6 +129,8 @@ public class slReservation extends HttpServlet {
 
             reservation = reservationDAO.lire_reservation(id_oeuvre, date_reservation);
             reservationDAO.Supprimer(reservation);
+            message = "Réservation supprimée avec succès";
+            request.setAttribute("succes", message);
             return ("listeReservations.res");
         } catch (Exception e) {
             throw e;
@@ -172,7 +175,7 @@ public class slReservation extends HttpServlet {
      * @throws Exception
      */
     private String enregistrerReservation(HttpServletRequest request) throws Exception {
-
+        String message = "";
         try {
             OeuvreDAO oeuvreDAO = new OeuvreDAO();
             int id_oeuvre = Integer.parseInt(request.getParameter("id"));
@@ -189,7 +192,8 @@ public class slReservation extends HttpServlet {
             ReservationDAO reservationDAO = new ReservationDAO();
             Reservation reservation = new Reservation(oeuvre.getId_oeuvre(), adherent.getId_adherent(), date);
             reservationDAO.ajouter(reservation);
-
+            message = "Réservation effectuée avec succès";
+            request.setAttribute("succes", message);
             return ("listeReservations.res");
         } catch (Exception e) {
             erreur = e.getMessage();
@@ -198,6 +202,8 @@ public class slReservation extends HttpServlet {
                 int id_oeuvre = Integer.parseInt(request.getParameter("id"));
                 Oeuvre oeuvre = oeuvreDAO.lire_Id(id_oeuvre);
                 erreur = "L'oeuvre " + oeuvre.getTitre() + " a déjà été réservée pour le : " + request.getParameter("txtDate") + " !";
+                request.setAttribute("erreur", erreur);
+                return ("catalogue.oe");
             }
 
             throw new Exception(erreur);

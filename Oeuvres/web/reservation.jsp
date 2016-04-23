@@ -34,7 +34,7 @@
                     </div>
                 </div>             
                 <div class="form-group">
-                    <div class="col-md-4 col-md-offset-4">
+                    <div class="modal-footer">
                         <button type="submit" class="btn btn-default btn-primary"><span class="glyphicon glyphicon-log-in"></span> Valider</button>
                     </div>
                 </div>
